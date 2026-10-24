@@ -1,0 +1,1021 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Cut Plan</title>
+<meta name="theme-color" content="#2D6A46">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Cut Plan">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icon-180.png">
+<link rel="icon" href="icon-192.png">
+
+<style>
+:root{--bg:#EEF2EE;--surface:#FFFFFF;--raised:#F5F8F5;--ink:#17201B;--muted:#56645C;--line:#D5DDD7;--herb:#2D6A46;--herb-ink:#FFFFFF;--herb-soft:#D6E8DC;--mustard:#B07C0C;--mustard-soft:#F5E8C6;--warn:#A63A24;color-scheme:light}
+@media (prefers-color-scheme:dark){:root{--bg:#0F1512;--surface:#18201C;--raised:#1F2924;--ink:#E6EDE8;--muted:#9BA9A1;--line:#2C3832;--herb:#72C392;--herb-ink:#0F1512;--herb-soft:#24402F;--mustard:#E2B24A;--mustard-soft:#3A3120;--warn:#F08C74;color-scheme:dark}}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--ink);font-family:"Avenir Next",Avenir,"Segoe UI Variable Text","Segoe UI",system-ui,-apple-system,sans-serif;font-size:16px;line-height:1.45;-webkit-text-size-adjust:100%}
+header{position:sticky;top:0;z-index:5;background:var(--bg);padding:calc(env(safe-area-inset-top) + 12px) 16px 10px;display:flex;align-items:baseline;justify-content:space-between;border-bottom:1px solid var(--line)}
+h1{font-size:1.55rem;letter-spacing:-.025em;margin:0;font-weight:700}
+main{padding:12px 14px calc(96px + env(safe-area-inset-bottom));max-width:640px;margin:0 auto}
+nav{position:fixed;bottom:0;left:0;right:0;display:flex;background:var(--surface);border-top:1px solid var(--line);padding-bottom:env(safe-area-inset-bottom);z-index:6}
+nav button{flex:1;background:none;border:0;padding:9px 2px 11px;color:var(--muted);font:inherit;font-size:.74rem;display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer}
+nav button[aria-current=page]{color:var(--herb);font-weight:700}
+nav svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.sec{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:14px;margin:0 0 12px}
+.sec h2{font-size:1.05rem;margin:0 0 8px;letter-spacing:-.01em}
+.sec h3{font-size:.95rem;margin:12px 0 4px}
+.muted{color:var(--muted)}.small{font-size:.85rem}
+.row{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.between{justify-content:space-between}
+button.btn{font:inherit;border:1px solid var(--line);background:var(--raised);color:var(--ink);border-radius:999px;padding:7px 14px;font-size:.9rem;cursor:pointer}
+button.btn.primary{background:var(--herb);color:var(--herb-ink);border-color:var(--herb);font-weight:600}
+button.link{background:none;border:0;color:var(--herb);font:inherit;padding:0;cursor:pointer;text-align:left;font-weight:600}
+input,select,textarea{font:inherit;font-size:16px;color:var(--ink);background:var(--raised);border:1px solid var(--line);border-radius:10px;padding:8px 10px;max-width:100%}
+select{padding:6px 8px;font-size:15px}
+textarea{width:100%;min-height:80px;resize:vertical}
+:focus-visible{outline:2px solid var(--herb);outline-offset:2px}
+.meal{display:grid;grid-template-columns:32px 1fr auto;gap:2px 10px;padding:10px 0;border-top:1px solid var(--line);align-items:start}
+.meal.first{border-top:0}
+.meal select{grid-column:2/4;margin-top:4px;width:100%}
+.tick{width:28px;height:28px;border-radius:50%;border:2px solid var(--line);background:none;display:grid;place-items:center;cursor:pointer;color:transparent;padding:0;font-size:15px}
+.tick.on{background:var(--herb);border-color:var(--herb);color:var(--herb-ink)}
+.slotlbl{font-size:.78rem;color:var(--muted)}
+.kc{font-variant-numeric:tabular-nums;text-align:right;font-size:.88rem;color:var(--muted)}
+.plate{display:flex;height:16px;border-radius:8px;overflow:hidden;background:var(--raised);border:1px solid var(--line);margin:10px 0 6px}
+.plate span{height:100%;border-right:2px solid var(--surface)}
+.seg-plan{background:var(--herb-soft)}.seg-ate{background:var(--herb)}.seg-free{background:var(--mustard)}
+.chips{display:flex;gap:6px;flex-wrap:wrap}
+.chip{min-width:40px;padding:6px 10px;border-radius:999px;border:1px solid var(--line);background:var(--raised);font:inherit;color:var(--ink);cursor:pointer}
+.chip.on{background:var(--herb);color:var(--herb-ink);border-color:var(--herb)}
+.free{background:var(--mustard-soft);border-radius:12px;padding:10px 12px;margin-top:6px;font-size:.9rem}
+.datebar{display:flex;align-items:center;justify-content:space-between;margin:0 0 12px;gap:8px}
+.datebar .mid{text-align:center}
+.datebar strong{font-size:1.1rem;display:block}
+.iconbtn{width:42px;height:42px;flex:none;border-radius:50%;border:1px solid var(--line);background:var(--surface);color:var(--ink);font-size:1.25rem;cursor:pointer}
+.big{font-size:2.7rem;font-weight:700;letter-spacing:-.035em;line-height:1;font-variant-numeric:tabular-nums}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.stat{font-size:.85rem;color:var(--muted)}
+.stat b{display:block;font-size:1.2rem;color:var(--ink);font-variant-numeric:tabular-nums}
+.shopitem{display:flex;gap:10px;align-items:flex-start;padding:9px 0;border-top:1px solid var(--line)}
+.shopitem.done .nm{text-decoration:line-through;color:var(--muted)}
+.shopitem .nm{font-weight:600}
+.sheet{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:20;display:flex;align-items:flex-end}
+.sheet .in{background:var(--surface);width:100%;max-width:640px;margin:0 auto;max-height:92vh;overflow:auto;border-radius:20px 20px 0 0;padding:18px 18px calc(28px + env(safe-area-inset-bottom))}
+.sheet h2{font-size:1.35rem;letter-spacing:-.02em;margin:0 0 4px;line-height:1.2}
+ol.steps{padding-left:1.3em;margin:6px 0}ol.steps li{margin-bottom:9px}
+ul.ing{list-style:none;padding:0;margin:4px 0}ul.ing li{padding:6px 0;border-top:1px solid var(--line)}
+details{margin-top:6px}details summary{cursor:pointer;font-weight:600;padding:4px 0}
+.warn{color:var(--warn)}
+.field{display:flex;flex-direction:column;gap:4px;font-size:.82rem;color:var(--muted)}
+.field input,.field select{color:var(--ink);width:100%}
+.pill{display:inline-block;font-size:.74rem;padding:2px 8px;border-radius:999px;background:var(--herb-soft);color:var(--ink)}
+.pill.y{background:var(--mustard-soft)}
+.timer{font-size:2.2rem;font-weight:700;font-variant-numeric:tabular-nums;letter-spacing:-.02em}
+.daycard .meal{grid-template-columns:1fr auto}
+.daycard .meal select{grid-column:1/3}
+.rlist button{display:flex;justify-content:space-between;width:100%;background:none;border:0;border-top:1px solid var(--line);padding:11px 0;font:inherit;color:var(--ink);text-align:left;cursor:pointer;gap:10px}
+.rlist button:first-child{border-top:0}
+.ifthen li{margin-bottom:8px}
+.saved{font-size:.78rem;color:var(--muted)}
+svg.chart text{fill:var(--muted);font-size:10px}
+.hint{font-size:.82rem;color:var(--muted);margin:4px 0 0}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+<header><h1 id="title">Today</h1><span class="saved" id="saved"></span></header>
+<main id="main"><p class="muted">Loading your plan…</p></main>
+<div id="modal"></div>
+<nav id="nav"></nav>
+<script>
+/* Web version: back the app's storage calls with this browser's localStorage. Data stays on this device. */
+if(!window.storage){window.storage={
+  async get(k){const v=localStorage.getItem(k);if(v===null)throw new Error('not found');return{key:k,value:v,shared:false};},
+  async set(k,v){localStorage.setItem(k,v);return{key:k,value:v,shared:false};},
+  async delete(k){localStorage.removeItem(k);return{key:k,deleted:true,shared:false};},
+  async list(p=''){return{keys:Object.keys(localStorage).filter(k=>k.startsWith(p)),prefix:p,shared:false};}};}
+if('serviceWorker' in navigator){addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}));}
+</script>
+<script>
+/* ---------- Ingredient catalog (volume units; meat by the pound or piece) ---------- */
+const CAT={
+chicken:{n:"Chicken breast, boneless skinless",r:"chicken breast",s:"meat",u:"lb",b:"lb",z:1,f:1},
+groundchicken:{n:"Ground chicken breast",r:"ground chicken breast",s:"meat",u:"lb",b:"lb",z:1,f:1},
+stewbeef:{n:"Beef stew meat (chuck)",r:"beef stew meat",s:"meat",u:"lb",b:"lb",z:1,f:1},
+sirloin:{n:"Sirloin steak",r:"sirloin steak, thinly sliced",s:"meat",u:"lb",b:"lb",z:1,f:1},
+salmon:{n:"Salmon fillets, frozen bag",r:"salmon fillet",pl:"salmon fillets",s:"frozen",u:"piece",b:"fillet",z:1,f:1},
+cod:{n:"Cod fillets, frozen bag",r:"cod",s:"frozen",u:"lb",b:"lb",z:1,f:1},
+shrimp:{n:"Shrimp, frozen (cooked or raw, peeled)",r:"shrimp",s:"frozen",u:"lb",b:"lb",z:1,f:1},
+burger:{n:"Beef burger patties, frozen",r:"beef burger patty",pl:"beef burger patties",s:"frozen",u:"piece",b:"patty",z:1,f:1},
+yogurt:{n:"Plain 0% Greek yogurt",r:"plain 0% Greek yogurt",s:"dairy",u:"cup",b:"big tub (32 oz, about 3¾ cups)",z:3.75},
+almond:{n:"Unsweetened almond milk",r:"unsweetened almond milk",s:"dairy",u:"cup",b:"half-gallon carton (8 cups)",z:8},
+tortilla:{n:"Corn tortillas (just corn, lime, salt)",r:"corn tortilla",s:"dairy",u:"ea",b:"pack of 30",z:30},
+banana:{n:"Bananas",r:"banana",s:"produce",u:"ea",b:"banana",z:1},
+lime:{n:"Limes",r:"lime",s:"produce",u:"ea",b:"lime",z:1},
+lemon:{n:"Lemons",r:"lemon",s:"produce",u:"ea",b:"lemon",z:1},
+pepper:{n:"Bell peppers",r:"bell pepper",s:"produce",u:"ea",b:"pepper",z:1},
+jalapeno:{n:"Jalapeños",r:"jalapeño, minced",s:"produce",u:"ea",b:"jalapeño",z:1},
+onion:{n:"Yellow onions",r:"onion",s:"produce",u:"ea",b:"onion",z:1},
+redonion:{n:"Red onion",r:"red onion",s:"produce",u:"ea",b:"onion",z:1},
+garlic:{n:"Garlic",r:"garlic",s:"produce",u:"clove",b:"head",z:10},
+ginger:{n:"Fresh ginger",r:"grated fresh ginger",s:"produce",u:"tbsp",b:"2-inch knob (about 2 tbsp grated; freeze the rest)",z:2},
+cilantro:{n:"Cilantro",r:"chopped cilantro",s:"produce",u:"cup",b:"bunch (about 1 cup chopped)",z:1},
+parsley:{n:"Flat-leaf parsley",r:"chopped parsley",s:"produce",u:"cup",b:"bunch (about 1 cup chopped)",z:1},
+mint:{n:"Mint",r:"chopped mint",s:"produce",u:"cup",b:"bunch (about ¾ cup chopped)",z:0.75},
+dill:{n:"Dill",r:"chopped dill",s:"produce",u:"cup",b:"bunch (about ¾ cup chopped)",z:0.75},
+scallion:{n:"Scallions",r:"scallion",s:"produce",u:"ea",b:"bunch (about 6)",z:6},
+redcabbage:{n:"Red cabbage",r:"shredded red cabbage",s:"produce",u:"cup",b:"small head (about 6 cups shredded)",z:6},
+brussels:{n:"Brussels sprouts",r:"Brussels sprouts, halved",s:"produce",u:"cup",b:"1 lb (about 4 cups)",z:4},
+butternut:{n:"Butternut squash",r:"cubed butternut squash",s:"produce",u:"cup",b:"squash (about 4 cups cubed), or a pre-cut tub",z:4},
+delicata:{n:"Delicata squash",r:"delicata squash",s:"produce",u:"ea",b:"squash",z:1},
+cauliflower:{n:"Cauliflower",r:"cauliflower florets",s:"produce",u:"cup",b:"head (about 5 cups florets)",z:5},
+kale:{n:"Lacinato (Tuscan) kale",r:"chopped kale",s:"produce",u:"cup",b:"bunch (about 6 cups chopped)",z:6},
+bokchoy:{n:"Baby bok choy",r:"baby bok choy, halved",pl:"baby bok choy, halved",s:"produce",u:"piece",b:"head",z:1},
+snappeas:{n:"Snap peas",r:"snap peas",s:"produce",u:"cup",b:"8 oz bag (about 2½ cups)",z:2.5},
+zucchini:{n:"Zucchini",r:"zucchini",s:"produce",u:"ea",b:"zucchini",z:1},
+cucumber:{n:"English cucumber",r:"chopped cucumber",s:"produce",u:"cup",b:"cucumber (about 2½ cups chopped)",z:2.5},
+tomato:{n:"Cherry tomatoes",r:"cherry tomatoes",s:"produce",u:"cup",b:"pint (about 2 cups)",z:2},
+radish:{n:"Radishes",r:"radish, thinly sliced",s:"produce",u:"ea",b:"bunch (about 10)",z:10},
+fennel:{n:"Fennel",r:"fennel bulb, sliced",s:"produce",u:"ea",b:"bulb",z:1},
+beet:{n:"Beets",r:"beet",s:"produce",u:"ea",b:"beet",z:1},
+carrot:{n:"Carrots",r:"carrot",s:"produce",u:"ea",b:"carrot",z:1},
+potato:{n:"Baby potatoes",r:"baby potatoes, halved",s:"produce",u:"cup",b:"1½ lb bag (about 4½ cups)",z:4.5},
+sweetpot:{n:"Sweet potatoes",r:"cubed sweet potato",s:"produce",u:"cup",b:"medium sweet potato (about 1¼ cups cubed)",z:1.25},
+spinach:{n:"Baby spinach",r:"baby spinach",s:"produce",u:"cup",b:"5 oz box (about 5 cups)",z:5},
+arugula:{n:"Arugula",r:"arugula",s:"produce",u:"cup",b:"5 oz box (about 5 cups)",z:5},
+mushrooms:{n:"Cremini mushrooms",r:"sliced cremini mushrooms",s:"produce",u:"cup",b:"8 oz pack (about 3 cups sliced)",z:3},
+jicama:{n:"Jicama",r:"jicama matchsticks",s:"produce",u:"cup",b:"small jicama (about 3 cups)",z:3},
+lettuce:{n:"Butter lettuce",r:"butter lettuce leaves",s:"produce",u:"ea",b:"head (about 12 leaves)",z:12},
+apple:{n:"Apples (try Honeycrisp or Pink Lady)",r:"apple",s:"produce",u:"ea",b:"apple",z:1},
+pear:{n:"Pears (Bosc or Anjou)",r:"pear",s:"produce",u:"ea",b:"pear",z:1},
+pomegranate:{n:"Pomegranate",r:"pomegranate seeds",s:"produce",u:"cup",b:"pomegranate (about ¾ cup seeds)",z:0.75},
+kiwi:{n:"Kiwis",r:"kiwi",s:"produce",u:"ea",b:"kiwi",z:1},
+clementine:{n:"Clementines",r:"clementine",s:"produce",u:"ea",b:"clementine",z:1},
+grapes:{n:"Red grapes",r:"red grapes",s:"produce",u:"cup",b:"bag (about 6 cups)",z:6},
+blueberries:{n:"Frozen blueberries",r:"frozen blueberries",s:"frozen",u:"cup",b:"bag (about 3½ cups)",z:3.5},
+peaches:{n:"Frozen peaches",r:"frozen peaches",s:"frozen",u:"cup",b:"bag (about 3½ cups)",z:3.5},
+mango:{n:"Frozen mango chunks",r:"frozen mango",s:"frozen",u:"cup",b:"bag (about 3½ cups)",z:3.5},
+pineapple:{n:"Frozen pineapple chunks",r:"frozen pineapple",s:"frozen",u:"cup",b:"bag (about 3½ cups)",z:3.5},
+cherries:{n:"Frozen dark cherries",r:"frozen dark cherries",s:"frozen",u:"cup",b:"bag (about 3½ cups)",z:3.5},
+broccoli:{n:"Frozen broccoli florets",r:"frozen broccoli",s:"frozen",u:"cup",b:"big bag (about 9 cups)",z:9},
+haricots:{n:"Frozen haricots verts",r:"frozen haricots verts",s:"frozen",u:"cup",b:"bag (about 4 cups)",z:4},
+corn:{n:"Frozen corn",r:"frozen corn",s:"frozen",u:"cup",b:"bag (about 3 cups)",z:3},
+peas:{n:"Frozen peas",r:"frozen peas",s:"frozen",u:"cup",b:"bag (about 3 cups)",z:3},
+stirfry:{n:"Frozen stir-fry vegetables",r:"frozen stir-fry vegetables",s:"frozen",u:"cup",b:"bag (about 4 cups)",z:4},
+rootveg:{n:"Frozen root vegetables",r:"frozen root vegetables",s:"frozen",u:"cup",b:"bag (about 4 cups)",z:4},
+rice:{n:"Jasmine or brown rice",r:"rice, dry",s:"grains",u:"cup",b:"2 lb bag (about 4½ cups dry)",z:4.5},
+quinoa:{n:"Quinoa",r:"quinoa, dry",s:"grains",u:"cup",b:"1 lb bag (about 2⅔ cups)",z:2.67},
+farro:{n:"Farro",r:"farro, dry",s:"grains",u:"cup",b:"1 lb bag (about 2½ cups)",z:2.5},
+orzo:{n:"Orzo",r:"orzo, dry",s:"grains",u:"cup",b:"1 lb box (about 2½ cups)",z:2.5},
+pasta:{n:"Rummo Maxima protein pasta (penne or rigatoni)",r:"Rummo protein penne, dry",s:"grains",u:"cup",b:"14.1 oz bag (about 3½ cups)",z:3.5},
+oats:{n:"Old-fashioned oats",r:"old-fashioned oats",s:"grains",u:"cup",b:"canister (about 15 cups)",z:15},
+whey:{n:"Whey protein, chocolate",r:"chocolate whey protein",s:"grains",u:"scoop",b:"tub (about 28 scoops)",z:28},
+pb:{n:"Peanut butter (just peanuts and salt)",r:"peanut butter",s:"cans",u:"tbsp",b:"jar (about 28 tbsp)",z:28},
+walnuts:{n:"Walnuts",r:"chopped walnuts",s:"cans",u:"tbsp",b:"bag (about 30 tbsp)",z:30},
+pepitas:{n:"Pepitas (pumpkin seeds)",r:"pepitas",s:"cans",u:"tbsp",b:"bag (about 28 tbsp)",z:28},
+apricots:{n:"Dried apricots (unsulfured)",r:"chopped dried apricots",s:"cans",u:"tbsp",b:"bag (about 24 tbsp chopped)",z:24},
+diced:{n:"Diced tomatoes",r:"diced tomatoes",s:"cans",u:"can",b:"14.5 oz can",z:1},
+crushed:{n:"Crushed tomatoes",r:"crushed tomatoes",s:"cans",u:"cup",b:"28 oz can (about 3¼ cups)",z:3.25},
+broth:{n:"Low-sodium broth (chicken or beef)",r:"low-sodium broth",s:"cans",u:"cup",b:"carton (4 cups)",z:4},
+coconut:{n:"Light coconut milk (new)",r:"light coconut milk",s:"cans",u:"cup",b:"13.5 oz can (about 1¾ cups)",z:1.75},
+tahini:{n:"Tahini (new)",r:"tahini",s:"cans",u:"tbsp",b:"jar (about 26 tbsp)",z:26},
+soy:{n:"Low-sodium soy sauce (new)",r:"low-sodium soy sauce",s:"cans",u:"tbsp",b:"bottle",z:30},
+greenhot:{n:"Green hot sauce",r:"green hot sauce",s:"sauces",u:"tbsp"},
+franks:{n:"Frank's hot sauce",r:"Frank's hot sauce",s:"sauces",u:"tsp"},
+brownmustard:{n:"Brown mustard",r:"brown mustard",s:"sauces",u:"tsp"},
+honeymustard:{n:"Honey mustard",r:"honey mustard",s:"sauces",u:"tbsp"},
+chipmayo:{n:"Chipotle mayo",r:"chipotle mayo",s:"sauces",u:"tsp"},
+ketchup:{n:"Primal Kitchen slightly sweet ketchup",r:"ketchup",s:"sauces",u:"tbsp"},
+nandos:{n:"Nando's peri-peri sauce",r:"Nando's peri-peri sauce",s:"sauces",u:"tbsp"},
+buffalo:{n:"Primal Kitchen buffalo sauce",r:"buffalo sauce",s:"sauces",u:"tbsp"},
+oliveoil:{n:"Olive oil",r:"olive oil",s:"pantry",u:"tsp"},
+honey:{n:"Honey",r:"honey",s:"pantry",u:"tsp"},
+salt:{n:"Salt",r:"salt",s:"pantry",u:"tsp"},
+blackpep:{n:"Black pepper",r:"black pepper",s:"pantry",u:"tsp"},
+garlicp:{n:"Garlic powder",r:"garlic powder",s:"pantry",u:"tsp"},
+chili:{n:"Chili powder (new spice)",r:"chili powder",s:"pantry",u:"tsp"},
+paprika:{n:"Smoked paprika (new spice)",r:"smoked paprika",s:"pantry",u:"tsp"},
+curry:{n:"Curry powder (new spice)",r:"curry powder",s:"pantry",u:"tsp"},
+cinnamon:{n:"Ground cinnamon",r:"ground cinnamon",s:"pantry",u:"tsp",opt:1},
+flakes:{n:"Red pepper flakes",r:"red pepper flakes",s:"pantry",u:"tsp",opt:1},
+cornstarch:{n:"Cornstarch",r:"cornstarch",s:"pantry",u:"tsp",opt:1},
+foil:{n:"Aluminum foil",r:"foil",s:"pantry",u:"sheet"}
+};
+const SECT=[['produce','Produce'],['meat','Meat (portion and freeze when you get home)'],['frozen','Frozen'],['dairy','Dairy & refrigerated'],['grains','Grains, pasta & protein powder'],['cans','Cans, jars, nuts & new sauces'],['sauces','Sauces you already have'],['pantry','Pantry basics and spices']];
+const DEFAULT_HAVE={chicken:'1 package in the freezer',groundchicken:'1 package in the freezer',shrimp:'Cooked shrimp in the freezer',burger:'Frozen raw burgers in the freezer',rootveg:'In the freezer',peaches:'In the freezer',blueberries:'In the freezer',haricots:'In the freezer',stirfry:'In the freezer',
+ greenhot:'In the fridge',franks:'In the fridge',brownmustard:'In the fridge',honeymustard:'In the fridge',chipmayo:'In the fridge',ketchup:'In the fridge',nandos:'In the fridge',buffalo:'In the fridge'};
+
+/* ---------- Recipes: per serving. Calories and protein include every sauce, oil, and seasoning. ----------
+   prep: Sunday-prep lunch. mar: how to season its chicken. jar: sauce made Sunday. roast/cut: veg prepped Sunday.
+   sr: uses a Sunday-cooked grain. del: uses delicate produce (scheduled in the first week after shopping).
+   tag: flavor family (no two in one day). batch: Sunday pot that makes 4. sc: slow cooker version. */
+const CH=['chicken',0.33,'⅓ lb chicken breast'];
+const R={
+/* ===== Breakfasts (Tuesday and Thursday) ===== */
+B1:{n:"Chocolate peanut butter banana shake",g:"Breakfast",slots:['b'],k:415,p:42,t:"3 min",eq:"NutriBullet",
+ ing:[['whey',1],['banana',1],['yogurt',0.5],['pb',1],['almond',1]],
+ steps:["Night before: put the yogurt and peanut butter in the NutriBullet cup, lid it, and refrigerate.","Morning: add the banana, whey, almond milk, and a few ice cubes. Blend 45–60 seconds."]},
+B2:{n:"Mango-ginger lassi smoothie",g:"Breakfast",slots:['b'],k:350,p:36,t:"3 min",eq:"NutriBullet",
+ ing:[['yogurt',1.5],['mango',1],['banana',0.5],['ginger',0.33,'1 tsp grated fresh ginger'],['lime',0.25,'squeeze of lime'],['almond',0.5]],
+ steps:["Blend everything 45–60 seconds. The frozen mango makes it thick and cold, like a mango lassi."]},
+B3:{n:"Apple pie overnight oats",g:"Breakfast",slots:['b'],k:400,p:29,t:"5 min, night before",eq:"A jar",
+ ing:[['oats',0.5],['yogurt',1],['almond',0.25],['apple',0.5,'½ apple, diced'],['walnuts',1],['honey',1],['cinnamon',0.5],['salt',0.06,'pinch of salt']],
+ steps:["Night before: stir the oats, yogurt, almond milk, cinnamon, honey, and salt in a jar. Fold in the diced apple, top with walnuts, and refrigerate.","Eat it cold on the way out."]},
+B4:{n:"Black forest shake (cherry & chocolate)",g:"Breakfast",slots:['b'],k:340,p:38,t:"3 min",eq:"NutriBullet",
+ ing:[['whey',1],['cherries',0.75],['banana',0.5],['yogurt',0.5],['almond',1]],
+ steps:["Blend everything 45–60 seconds. Frozen cherries and chocolate taste like dessert."]},
+B5:{n:"Pomegranate-orange yogurt jar with pepitas",g:"Breakfast",slots:['b'],k:380,p:41,t:"5 min, night before",eq:"A jar",
+ ing:[['yogurt',1.5],['pomegranate',0.5],['clementine',1,'1 clementine (zest and segments)'],['pepitas',2],['honey',1]],
+ steps:["Night before: zest the clementine into the yogurt and stir in the honey. Layer it in a jar with the clementine segments and pomegranate seeds.","Keep the pepitas in a separate little bag so they stay crunchy; sprinkle on before eating."],
+ tip:"To seed a pomegranate without a mess, cut it in half and whack the back with a wooden spoon over a bowl of water. Seeds sink; pith floats."},
+
+/* ===== Weekday lunches (Sunday prep) ===== */
+L1:{n:"Green chile chicken burrito bowl",g:"Lunch",prep:1,sr:1,tag:'mex',slots:['l'],k:590,p:48,t:"Sunday prep, 3 min to assemble",eq:"Sheet pan (Sunday), microwave",
+ mar:"green hot sauce, lime, oil, salt",jar:"cilantro-lime crema",roast:[['pepper',0.5],['onion',0.25]],
+ parts:{Protein:"Green hot sauce–lime chicken",Starch:"Rice",Veg:"Roasted peppers and onion, corn",Sauce:"Cilantro-lime crema"},
+ ing:[CH,['greenhot',2],['lime',0.5,'½ lime (juice for chicken and crema)'],['oliveoil',1],['salt',0.25],['rice',0.33],['pepper',0.5],['onion',0.25],['corn',0.5],['yogurt',0.25],['chipmayo',1],['cilantro',0.125]],
+ steps:["Sunday: toss the chicken with the green hot sauce, juice of ¼ lime, oil, and salt. Roast on the chicken pan with the sliced pepper and onion.","Sunday jar: stir the yogurt, chipotle mayo, cilantro, and the rest of the lime juice.","To eat: rice, chicken, peppers, and frozen corn in your bowl. Splash of water, cover, microwave 2½ min. Top with crema."]},
+L2:{n:"Peri-peri chicken with roasted butternut, kale & farro",g:"Lunch",prep:1,sr:1,tag:'peri',slots:['l'],k:590,p:48,t:"Sunday prep, 3 min to assemble",eq:"Two sheet pans (Sunday), small pot, microwave",
+ mar:"2 tbsp Nando's and oil",jar:"peri-peri yogurt",roast:[['butternut',1.5]],cut:[['kale',1.5]],
+ parts:{Protein:"Nando's chicken",Starch:"Butternut squash and farro",Veg:"Lemony massaged kale",Sauce:"Peri-peri yogurt"},
+ ing:[CH,['nandos',3,"3 tbsp Nando's (2 marinade, 1 sauce)"],['oliveoil',2],['salt',0.25],['butternut',1.5],['farro',0.25],['kale',1.5],['lemon',0.25,'lemon wedge'],['yogurt',0.25]],
+ steps:["Sunday: coat the chicken in 2 tbsp Nando's and 1 tsp oil; roast on the chicken pan. Roast the butternut cubes on the vegetable tray with 1 tsp oil and salt.","Sunday: rub the kale with lemon juice and a pinch of salt until it softens. It keeps 4 days and gets better.","Sunday jar: yogurt plus 1 tbsp Nando's.","To eat: microwave chicken, squash, and farro 2 min. Add the kale and sauce."]},
+L3:{n:"Buffalo chicken with roasted cauliflower & root vegetables, dill yogurt",g:"Lunch",prep:1,tag:'buffalo',slots:['l'],k:490,p:45,t:"Sunday prep, 3 min to assemble",eq:"Two sheet pans (Sunday), microwave",
+ mar:"just salt (buffalo sauce goes on after reheating)",jar:"dill yogurt",roast:[['cauliflower',1.5],['rootveg',2]],
+ parts:{Protein:"Buffalo chicken",Starch:"Roasted root vegetables",Veg:"Roasted cauliflower",Sauce:"Dill yogurt"},
+ ing:[CH,['salt',0.25],['cauliflower',1.5],['rootveg',2],['oliveoil',1],['garlicp',0.25],['buffalo',2],['yogurt',0.25],['dill',0.0625,'1 tbsp chopped dill'],['lemon',0.25,'squeeze of lemon']],
+ steps:["Sunday: salt the chicken and roast it. Roast the cauliflower and frozen root vegetables with the oil, garlic powder, and salt until browned at the edges.","Sunday jar: yogurt, dill, lemon, pinch of salt.","To eat: microwave chicken and vegetables 2 min, toss the chicken in buffalo sauce, and drizzle with dill yogurt."]},
+L4:{n:"Honey-mustard chicken with Brussels sprouts, apple & farro",g:"Lunch",prep:1,sr:1,tag:'mustard',slots:['l'],k:610,p:48,t:"Sunday prep, 3 min to assemble",eq:"Two sheet pans (Sunday), small pot, microwave",
+ mar:"honey mustard, salt",jar:"honey-mustard yogurt",roast:[['brussels',1.5]],
+ parts:{Protein:"Honey-mustard chicken",Starch:"Farro",Veg:"Crispy Brussels sprouts and fresh apple",Sauce:"Honey-mustard yogurt"},
+ ing:[CH,['honeymustard',2,'2 tbsp honey mustard (1 marinade, 1 sauce)'],['salt',0.25],['brussels',1.5],['oliveoil',1],['farro',0.25],['apple',0.5,'½ apple, diced'],['walnuts',1],['yogurt',0.125]],
+ steps:["Sunday: coat the chicken with 1 tbsp honey mustard and salt; roast. Roast the halved Brussels sprouts cut-side down with the oil and salt until deeply browned.","Sunday jar: 1 tbsp honey mustard and 2 tbsp yogurt.","To eat: microwave chicken, sprouts, and farro 2 min. Add diced apple, walnuts, and the sauce."]},
+L5:{n:"Ginger-scallion chicken with snap peas & pickled radish",g:"Lunch",prep:1,sr:1,del:1,tag:'asian',slots:['l'],k:535,p:45,t:"Sunday prep, 3 min to assemble",eq:"Sheet pan (Sunday), microwave",
+ mar:"soy sauce, grated garlic",jar:"ginger-scallion sauce and pickled radishes",cut:[['snappeas',1],['radish',3]],
+ parts:{Protein:"Soy-garlic chicken",Starch:"Rice",Veg:"Snap peas and quick-pickled radish",Sauce:"Ginger-scallion sauce"},
+ ing:[CH,['soy',1],['garlic',1],['rice',0.33],['snappeas',1],['radish',3],['lime',0.25,'¼ lime, for the pickles'],['honey',0.5,'½ tsp honey'],['scallion',2],['ginger',0.5,'1½ tsp grated ginger'],['oliveoil',2],['salt',0.125,'pinch of salt']],
+ steps:["Sunday: coat the chicken with half the soy sauce and the garlic; roast.","Sunday jar 1, ginger-scallion sauce: finely slice the scallions and stir with the ginger, oil, rest of the soy, and a pinch of salt. Microwave 20 seconds so it sizzles.","Sunday jar 2, pickled radish: sliced radish, lime juice, honey, pinch of salt.","To eat: microwave chicken and rice 2 min. Add raw snap peas, pickled radish, and spoon the sauce over everything."]},
+L6:{n:"Lemon-tahini chicken with roasted beets, quinoa & pomegranate",g:"Lunch",prep:1,sr:1,del:1,tag:'tahini',slots:['l'],k:545,p:46,t:"Sunday prep, 3 min to assemble",eq:"Sheet pan (Sunday), small pot",
+ mar:"lemon, garlic, oil, salt",jar:"lemon-tahini sauce",roast:[['beet',1]],cut:[['cucumber',0.5]],
+ parts:{Protein:"Lemon-garlic chicken",Starch:"Quinoa",Veg:"Roasted beets, cucumber, parsley",Sauce:"Lemon-tahini"},
+ ing:[CH,['lemon',0.5,'½ lemon (marinade and sauce)'],['garlic',1],['oliveoil',1],['salt',0.25],['beet',1],['quinoa',0.25],['cucumber',0.5],['parsley',0.125],['pomegranate',0.25],['tahini',1]],
+ steps:["Sunday: coat the chicken in half the lemon juice, half the garlic, the oil, and salt; roast. Wrap the beet in foil and roast 45–60 min until a knife slides in; rub off the skin with a paper towel and cube.","Sunday jar: whisk the tahini with the rest of the lemon and garlic, a pinch of salt, and water until pourable.","To eat: warm the chicken and quinoa 90 seconds. Add beets, cucumber, parsley, pomegranate, and tahini sauce. Good cold too."],
+ tip:"Beets are new for a lot of people: roasted, they taste sweet and earthy. Vacuum-packed cooked beets are a fine shortcut."},
+L7:{n:"Curry-roasted chicken & cauliflower with mango-mint yogurt",g:"Lunch",prep:1,sr:1,tag:'curry',slots:['l'],k:560,p:49,t:"Sunday prep, 3 min to assemble",eq:"Sheet pan (Sunday), NutriBullet, microwave",
+ mar:"curry powder, oil, salt",jar:"mango-mint yogurt",roast:[['cauliflower',1.5]],
+ parts:{Protein:"Curry chicken",Starch:"Rice",Veg:"Curry-roasted cauliflower and peas",Sauce:"Mango-mint yogurt"},
+ ing:[CH,['curry',1],['oliveoil',1],['salt',0.25],['cauliflower',1.5],['peas',0.5],['rice',0.25],['yogurt',0.25],['mango',0.5],['mint',0.0625,'1 tbsp chopped mint'],['lime',0.25,'squeeze of lime']],
+ steps:["Sunday: toss the chicken and cauliflower with the curry powder, oil, and salt; roast both on the chicken pan.","Sunday jar: blend the thawed mango, yogurt, mint, lime, and a pinch of salt in the NutriBullet.","To eat: rice, chicken, cauliflower, and frozen peas in your bowl. Splash of water, cover, microwave 3 min. Spoon over the mango yogurt."]},
+L8:{n:"Greek yogurt-marinated chicken with blistered tomatoes, zucchini & orzo",g:"Lunch",prep:1,sr:1,del:1,tag:'med',slots:['l'],k:530,p:47,t:"Sunday prep, 3 min to assemble",eq:"Sheet pan (Sunday), small pot, microwave",
+ mar:"yogurt, lemon, garlic, smoked paprika, salt",jar:"lemon-dill yogurt",roast:[['zucchini',1],['tomato',0.75]],
+ parts:{Protein:"Yogurt-marinated chicken",Starch:"Orzo",Veg:"Roasted zucchini and blistered cherry tomatoes",Sauce:"Lemon-dill yogurt"},
+ ing:[CH,['yogurt',0.25,'¼ cup Greek yogurt (half marinade, half sauce)'],['lemon',0.5],['garlic',1],['paprika',0.5],['salt',0.25],['zucchini',1],['tomato',0.75],['oliveoil',1],['orzo',0.33],['dill',0.0625,'1 tbsp chopped dill']],
+ steps:["Sunday: coat the chicken in half the yogurt, half the lemon juice, the garlic, smoked paprika, and salt; roast. Roast the zucchini half-moons and cherry tomatoes with the oil until the tomatoes burst.","Sunday: boil the orzo 8 min in salted water and drain.","Sunday jar: rest of the yogurt, lemon, and dill.","To eat: microwave everything 2 min and add the sauce."]},
+L9:{n:"Chicken-zucchini meatballs with farro, broccoli & lemon-tahini",g:"Lunch",prep:1,sr:1,tag:'tahini',slots:['l'],k:540,p:45,t:"Sunday prep, 3 min to assemble",eq:"Sheet pan (Sunday), small pot, microwave",
+ prot:"Mix the ground chicken, grated zucchini, oats, garlic, parsley, and salt for the meatballs; roll into 1½-inch balls and bake on the chicken pan 15–18 min",jar:"lemon-tahini sauce",roast:[['broccoli',1.5]],
+ parts:{Protein:"Chicken-zucchini meatballs",Starch:"Farro",Veg:"Roasted broccoli",Sauce:"Lemon-tahini"},
+ ing:[['groundchicken',0.33],['zucchini',0.25,'¼ zucchini, grated and squeezed dry'],['oats',0.125,'2 tbsp oats (instead of breadcrumbs)'],['garlic',1],['parsley',0.0625,'1 tbsp chopped parsley'],['salt',0.25],['farro',0.25],['broccoli',1.5],['oliveoil',1],['tahini',1],['lemon',0.5]],
+ steps:["Sunday: mix the meatball ingredients with your hands, roll into 1½-inch balls (about 5), and bake at 425°F for 15–18 min. Roast the frozen broccoli with the oil and salt.","Sunday jar: whisk the tahini, lemon juice, pinch of salt, and water until pourable.","To eat: microwave meatballs, farro, and broccoli 2 min; drizzle with tahini."]},
+L10:{n:"Peanut-lime chicken with crunchy red cabbage, jicama & carrot",g:"Lunch",prep:1,sr:1,tag:'peanut',slots:['l'],k:550,p:45,t:"Sunday prep, 2 min to assemble",eq:"Sheet pan (Sunday)",
+ mar:"oil, salt",jar:"peanut-lime sauce",cut:[['redcabbage',1],['jicama',0.5],['carrot',0.5]],
+ parts:{Protein:"Roasted chicken",Starch:"Rice",Veg:"Red cabbage, jicama, carrot, cilantro",Sauce:"Peanut-lime"},
+ ing:[CH,['oliveoil',1],['salt',0.25],['rice',0.25],['redcabbage',1],['jicama',0.5],['carrot',0.5,'½ carrot, shredded'],['cilantro',0.125],['pb',1],['lime',0.5],['soy',0.67,'2 tsp soy sauce'],['honey',1],['ginger',0.33,'1 tsp grated ginger'],['franks',1,"1 tsp Frank's or green hot sauce"]],
+ steps:["Sunday: roast the chicken with oil and salt. Shred the cabbage, cut the jicama into matchsticks, and shred the carrot.","Sunday jar: whisk the peanut butter, lime juice, soy, honey, ginger, hot sauce, and 1–2 tbsp warm water.","To eat: warm the chicken and rice 90 seconds (or eat it cold). Pile on the crunchy vegetables and cilantro, then the sauce."],
+ tip:"Jicama is crisp, juicy, and slightly sweet, like a cross between an apple and a water chestnut."},
+L11:{n:"Chili-lime shrimp & mango quinoa bowl",g:"Lunch",prep:1,sr:1,del:1,tag:'tropical',slots:['l'],k:520,p:46,t:"Sunday prep, eat cold",eq:"Sauté pan and small pot (Sunday)",
+ prot:"Cook the shrimp for the shrimp bowls in the sauté pan with oil, chili powder, salt, and lime, 1 min for cooked shrimp or 2–3 min for raw",jar:"lime yogurt",cut:[['cucumber',0.5]],
+ parts:{Protein:"Chili-lime shrimp",Starch:"Quinoa",Veg:"Mango, cucumber, red onion, cilantro",Sauce:"Lime yogurt"},
+ ing:[['shrimp',0.33],['chili',0.5],['lime',0.5],['oliveoil',1],['salt',0.25],['quinoa',0.33],['mango',0.5],['cucumber',0.5],['redonion',0.125,'2 tbsp diced red onion'],['jalapeno',0.25],['cilantro',0.125],['yogurt',0.25],['pepitas',1]],
+ steps:["Sunday: cook the shrimp in the oil with chili powder and salt; squeeze over half the lime.","Sunday jar: yogurt with the rest of the lime and a pinch of salt.","To eat (cold, no microwave): quinoa, shrimp, thawed mango, cucumber, red onion, jalapeño, cilantro, lime yogurt, pepitas."]},
+L12:{n:"BBQ chicken with roasted sweet potato & charred corn slaw",g:"Lunch",prep:1,tag:'bbq',slots:['l'],k:525,p:42,t:"Sunday prep, 3 min to assemble",eq:"Two sheet pans (Sunday), microwave",
+ mar:"half the BBQ sauce, oil, salt",jar:"BBQ sauce",roast:[['sweetpot',1.5],['corn',0.5]],cut:[['redcabbage',1]],
+ parts:{Protein:"BBQ chicken",Starch:"Roasted sweet potato",Veg:"Charred corn and red cabbage slaw",Sauce:"BBQ sauce from your fridge"},
+ ing:[CH,['ketchup',2],['brownmustard',1],['honey',1],['franks',1],['garlicp',0.25],['salt',0.25],['oliveoil',1],['sweetpot',1.5],['corn',0.5],['redcabbage',1],['lime',0.25,'squeeze of lime']],
+ steps:["Sunday jar: stir the ketchup, brown mustard, honey, Frank's, and garlic powder. Brush half on the chicken and roast it.","Sunday: roast the sweet potato cubes and frozen corn with the oil and salt until the corn is charred in spots. Shred the cabbage and toss with lime and salt.","To eat: microwave chicken, sweet potato, and corn 2 min; top with slaw and the rest of the BBQ sauce."]},
+
+/* ===== Weekend lunches (made fresh) ===== */
+W1:{n:"Pineapple chicken fried rice (no egg)",g:"Weekend lunch",sr:1,tag:'asian',slots:['l'],k:575,p:43,t:"Made fresh, 15 min",eq:"Sauté pan",
+ parts:{Protein:"Diced chicken",Starch:"Sunday rice",Veg:"Stir-fry vegetables and pineapple",Sauce:"Soy, garlic, ginger"},
+ ing:[['chicken',0.33,'⅓ lb chicken breast, diced'],['rice',0.33,'⅓ cup dry rice, cooked (a Sunday portion)'],['stirfry',1],['pineapple',0.5],['scallion',2],['garlic',2],['ginger',0.33,'1 tsp grated ginger'],['soy',1.5],['oliveoil',2],['greenhot',0.33,'1 tsp green hot sauce']],
+ steps:["Cold or frozen rice fries best; microwave frozen rice 1 minute to loosen.","Heat 1 tsp oil in the sauté pan over high. Cook the chicken 4–5 min and push it aside.","Add the rest of the oil, the frozen vegetables, and pineapple; cook 3 min until they char. Add garlic, ginger, and rice; press flat and let it crisp 2 min.","Add soy and hot sauce, toss, and top with scallions."]},
+W2:{n:"Crispy chicken tacos with mango-jalapeño salsa",g:"Weekend lunch",tag:'mex',slots:['l'],k:525,p:48,t:"Made fresh, 20 min",eq:"Sauté pan",
+ parts:{Protein:"Chili-spiced chicken",Starch:"Corn tortillas",Veg:"Mango salsa and red cabbage",Sauce:"Lime yogurt"},
+ ing:[['chicken',0.33,'⅓ lb chicken breast, diced small'],['chili',0.5],['garlicp',0.25],['salt',0.25],['oliveoil',1],['tortilla',4],['mango',0.5],['jalapeno',0.25],['redonion',0.125,'2 tbsp diced red onion'],['cilantro',0.125],['lime',0.5],['redcabbage',0.5],['yogurt',0.25]],
+ steps:["Salsa: dice the thawed mango and toss with jalapeño, red onion, cilantro, half the lime, and a pinch of salt.","Season the chicken with chili powder, garlic powder, and salt. Cook in the oil over medium-high until crisp at the edges, 5–6 min.","Warm the tortillas in the dry pan, 30 seconds a side.","Fill with cabbage, chicken, salsa, and yogurt mixed with the rest of the lime."]},
+W3:{n:"Green chile chicken & rice soup",g:"Weekend lunch",tag:'mex',slots:['l'],k:545,p:44,t:"Made fresh, 25 min, one pot",eq:"Small pot",
+ parts:{Protein:"Diced chicken",Starch:"Rice cooked in the soup",Veg:"Onion, tomatoes, corn",Sauce:"Green hot sauce and lime broth"},
+ ing:[['chicken',0.33,'⅓ lb chicken breast, diced'],['oliveoil',1],['onion',0.25],['garlic',1],['chili',1],['broth',2],['diced',0.5],['rice',0.25],['corn',0.5],['greenhot',1],['lime',0.5],['yogurt',0.125],['cilantro',0.0625,'1 tbsp cilantro'],['salt',0.25]],
+ steps:["Cook the diced onion in the oil in the small pot, 3 min. Add garlic and chili powder for 30 seconds.","Add the broth, tomatoes, and dry rice; simmer covered 12 min.","Add the chicken and corn; simmer 6–8 min until cooked through.","Off the heat, stir in the green hot sauce, lime, and salt. Top with yogurt and cilantro."]},
+W4:{n:"Chicken, pear & walnut salad with roasted delicata squash",g:"Weekend lunch",del:1,tag:'mustard',slots:['l'],k:500,p:41,t:"Made fresh, 30 min",eq:"Toaster oven, grill pan",
+ parts:{Protein:"Grilled chicken",Starch:"Roasted delicata squash",Veg:"Arugula, pear, pomegranate",Sauce:"Honey-mustard vinaigrette"},
+ ing:[['chicken',0.33],['delicata',0.5,'½ delicata squash, sliced into half-moons (skin on; it is edible)'],['oliveoil',2],['salt',0.5],['arugula',2],['pear',0.5],['walnuts',2],['pomegranate',0.125,'2 tbsp pomegranate seeds'],['honeymustard',1],['lemon',0.25,'squeeze of lemon']],
+ steps:["Roast the delicata slices with 1 tsp oil and salt in the toaster oven at 425°F, 20 min, flipping once.","Grill the salted chicken on the grill pan, 5–6 min per side. Rest and slice.","Whisk the honey mustard, lemon, and 1 tsp oil. Toss with the arugula.","Top with the squash, sliced pear, chicken, walnuts, and pomegranate."]},
+W5:{n:"Blackened cod tacos with pineapple & lime slaw",g:"Weekend lunch",tag:'fish',slots:['l'],k:485,p:51,t:"Made fresh, 15 min",eq:"Sauté pan",
+ parts:{Protein:"Blackened cod",Starch:"Corn tortillas",Veg:"Lime cabbage slaw and pineapple",Sauce:"Lime yogurt"},
+ ing:[['cod',0.5],['paprika',0.5],['chili',0.5],['garlicp',0.25],['salt',0.25],['oliveoil',1],['tortilla',3],['redcabbage',1],['lime',0.5],['pineapple',0.5],['yogurt',0.25],['cilantro',0.0625,'1 tbsp cilantro']],
+ steps:["Move the cod to the fridge the night before. Pat dry and coat with smoked paprika, chili powder, garlic powder, and salt.","Sear in the oil in a hot sauté pan, 2–3 min per side, until it flakes.","Toss the cabbage with half the lime and a pinch of salt. Dice the thawed pineapple. Stir the rest of the lime into the yogurt.","Warm the tortillas and fill: slaw, cod, pineapple, lime yogurt, cilantro."]},
+
+/* ===== Dinners (made the day of) ===== */
+D1:{n:"Honey-mustard salmon with crispy potatoes & roasted fennel",g:"Dinner",tag:'mustard',slots:['d'],k:585,p:40,t:"30 min, one tray",eq:"Toaster oven, foil",
+ parts:{Protein:"Salmon",Starch:"Crispy baby potatoes",Veg:"Roasted fennel",Sauce:"Honey-mustard dill yogurt"},
+ ing:[['salmon',1,'1 salmon fillet (about ⅓ lb)'],['potato',1.33],['fennel',0.5],['oliveoil',1],['salt',0.5],['blackpep',0.25],['honeymustard',1],['yogurt',0.125],['dill',0.0625,'1 tbsp chopped dill'],['lemon',0.25,'lemon wedge'],['foil',1]],
+ steps:["Move the salmon to the fridge the night before. Heat the toaster oven to 425°F with a foil-lined tray.","Toss the potatoes and sliced fennel with the oil and salt; roast 15 min.","Add the seasoned salmon and roast 12–14 min, until it flakes.","Stir honey mustard, yogurt, dill, and lemon; spoon over everything."],
+ tip:"Fennel tastes faintly of licorice raw, but roasting turns it sweet and mellow."},
+D2:{n:"Garlic-ginger shrimp with bok choy & snap peas",g:"Dinner",sr:1,del:1,tag:'asian',slots:['d'],k:590,p:58,t:"15 min",eq:"Sauté pan with lid, microwave",
+ parts:{Protein:"Shrimp",Starch:"Rice",Veg:"Baby bok choy and snap peas",Sauce:"Honey-soy-ginger glaze"},
+ ing:[['shrimp',0.5],['bokchoy',2],['snappeas',1],['rice',0.33,'⅓ cup dry rice, cooked (a Sunday portion)'],['garlic',3],['ginger',0.33,'1 tsp grated ginger'],['soy',1.5],['honey',2],['oliveoil',1],['lime',0.25,'lime wedge'],['flakes',0.125,'pinch of red pepper flakes']],
+ steps:["Move the shrimp to the fridge the night before. Stir the soy, honey, and 1 tbsp water in a mug.","Heat the oil in the sauté pan over high. Add the bok choy cut-side down and the snap peas; sear 2 min, add 2 tbsp water, cover 1 min to steam.","Add the shrimp, garlic, ginger, and flakes; cook 1 min (cooked shrimp) or 2–3 min (raw). Pour in the sauce and toss until glossy.","Serve over the microwaved rice with a squeeze of lime."]},
+D3:{n:"Sheet-pan chicken with roasted grapes, Brussels sprouts & sweet potato",g:"Dinner",tag:'sheet',slots:['d'],k:590,p:57,t:"35 min, one tray",eq:"Oven, foil",
+ parts:{Protein:"Chicken breast",Starch:"Sweet potato",Veg:"Brussels sprouts and roasted grapes",Sauce:"Mustard-honey pan glaze"},
+ ing:[['chicken',0.5,'½ lb chicken breast'],['grapes',0.75],['brussels',1],['sweetpot',1],['oliveoil',2],['salt',0.5],['blackpep',0.25],['brownmustard',1],['honey',1]],
+ steps:["Move the chicken to the fridge the night before. Heat the oven to 425°F with a foil-lined sheet pan.","Toss the sweet potato and halved sprouts with the oil and salt; roast 15 min.","Brush the chicken with the mustard and honey, season with salt and pepper, and add it to the pan with the grapes. Roast 18–22 min, to 165°F.","Roasted grapes burst into a jammy sauce. Spoon the pan juices over everything."],
+ tip:"Roasted grapes are sweet, tart, and jammy, and they go great with mustard."},
+D4:{n:"Chicken arrabbiata with spinach & protein penne",g:"Dinner",del:1,tag:'ital',slots:['d'],k:570,p:57,t:"25 min",eq:"Large pot, sauté pan",
+ parts:{Protein:"Diced chicken breast",Starch:"Rummo protein penne",Veg:"Wilted spinach",Sauce:"Spicy garlic tomato sauce"},
+ ing:[['chicken',0.33,'⅓ lb chicken breast, diced'],['pasta',0.75],['crushed',0.5],['garlic',2],['flakes',0.5],['oliveoil',1],['salt',0.5],['spinach',2],['parsley',0.0625,'1 tbsp chopped parsley']],
+ steps:["Move the chicken to the fridge the night before. Cook the pasta in salted water.","Cook the chicken in the oil with salt in the sauté pan, 5 min. Add the sliced garlic and pepper flakes for 30 seconds, then the crushed tomatoes; simmer 8 min.","Stir in the spinach until it wilts, then the drained pasta and a splash of pasta water. Top with parsley."]},
+D5:{n:"Chicken fajita skillet bowl",g:"Dinner",sr:1,tag:'mex',slots:['d'],k:550,p:62,t:"20 min",eq:"Sauté pan, microwave",
+ parts:{Protein:"Fajita chicken",Starch:"Rice",Veg:"Charred peppers and onion",Sauce:"Cilantro-lime yogurt"},
+ ing:[['chicken',0.5,'½ lb chicken breast, sliced'],['greenhot',1],['chili',1],['salt',0.25],['lime',0.5],['pepper',1],['onion',0.5],['oliveoil',1],['rice',0.25,'¼ cup dry rice, cooked (a Sunday portion)'],['yogurt',0.25],['cilantro',0.125],['jalapeno',0.25]],
+ steps:["Move the chicken to the fridge the night before. Toss it with the green hot sauce, chili powder, salt, and half the lime.","Sear the sliced pepper and onion in the oil in a very hot sauté pan until charred, 5 min; push aside. Add the chicken and cook 5–6 min.","Stir the yogurt, cilantro, and remaining lime. Serve over rice with jalapeño."]},
+D6:{n:"One-pan lemon shrimp orzo with spinach & tomatoes",g:"Dinner",del:1,tag:'ital',slots:['d'],k:590,p:60,t:"20 min, one pan",eq:"Sauté pan with lid",
+ parts:{Protein:"Shrimp",Starch:"Orzo",Veg:"Spinach and cherry tomatoes",Sauce:"Lemon-garlic broth"},
+ ing:[['shrimp',0.5],['orzo',0.5],['broth',1],['garlic',2],['lemon',0.5,'½ lemon (zest and juice)'],['spinach',2],['tomato',0.75],['oliveoil',1],['flakes',0.125,'pinch of red pepper flakes'],['salt',0.25],['parsley',0.0625,'1 tbsp chopped parsley']],
+ steps:["Move the shrimp to the fridge the night before. Toast the orzo and garlic in the oil in the sauté pan, 2 min.","Add the broth and lemon zest; cover and simmer 10 min, stirring once.","Add the halved tomatoes, spinach, and shrimp; cover 2–3 min until the shrimp is pink (1 min if cooked).","Finish with lemon juice, flakes, salt, and parsley."]},
+D7:{n:"Chipotle salmon bowl with mango & red cabbage slaw",g:"Dinner",sr:1,tag:'tropical',slots:['d'],k:600,p:40,t:"20 min",eq:"Toaster oven, microwave",
+ parts:{Protein:"Chipotle-glazed salmon",Starch:"Rice",Veg:"Red cabbage slaw and mango",Sauce:"Lime yogurt"},
+ ing:[['salmon',1,'1 salmon fillet (about ⅓ lb)'],['chipmayo',1],['salt',0.25],['rice',0.25,'¼ cup dry rice, cooked (a Sunday portion)'],['redcabbage',1],['mango',0.5],['lime',0.5],['cilantro',0.0625,'1 tbsp cilantro'],['yogurt',0.25],['foil',1]],
+ steps:["Move the salmon to the fridge the night before. Brush with chipotle mayo and salt; roast at 425°F in the toaster oven, 12–14 min.","Toss the cabbage with half the lime and a pinch of salt. Dice the thawed mango.","Stir the rest of the lime into the yogurt. Build: rice, slaw, mango, salmon, lime yogurt, cilantro."]},
+D8:{n:"Buffalo chicken stuffed sweet potato with dill yogurt",g:"Dinner",tag:'buffalo',slots:['d'],k:550,p:46,t:"15 min",eq:"Microwave, sauté pan",
+ parts:{Protein:"Buffalo chicken",Starch:"Sweet potato",Veg:"Broccoli",Sauce:"Dill yogurt"},
+ ing:[['sweetpot',2,'1 large sweet potato (about 2 cups)'],['chicken',0.33,'⅓ lb chicken breast, diced'],['oliveoil',1],['salt',0.25],['buffalo',2],['broccoli',1],['yogurt',0.25],['dill',0.0625,'1 tbsp chopped dill'],['lemon',0.25,'squeeze of lemon']],
+ steps:["Move the chicken to the fridge the night before. Poke the sweet potato all over and microwave 8–10 min, turning halfway.","Cook the chicken in the oil with salt, 5–6 min. Off the heat, toss with buffalo sauce. Microwave the broccoli 4 min.","Stir the yogurt, dill, lemon, and salt. Split the potato; fill with chicken and broccoli; drizzle."]},
+D9:{n:"Coconut curry chicken with cauliflower, kale & peas",g:"Dinner",sr:1,tag:'curry',slots:['d'],k:580,p:46,t:"25 min",eq:"Sauté pan with lid, microwave",
+ parts:{Protein:"Chicken breast",Starch:"Rice",Veg:"Cauliflower, kale, peas",Sauce:"Coconut-tomato curry"},
+ ing:[['chicken',0.33,'⅓ lb chicken breast, diced'],['oliveoil',1],['onion',0.25],['garlic',2],['ginger',0.33,'1 tsp grated ginger'],['curry',1.5],['coconut',0.25],['diced',0.25],['cauliflower',1],['kale',1],['peas',0.5],['rice',0.25,'¼ cup dry rice, cooked (a Sunday portion)'],['lime',0.25,'lime wedge'],['cilantro',0.0625,'1 tbsp cilantro'],['salt',0.5]],
+ steps:["Move the chicken to the fridge the night before. Cook the onion in the oil 3 min; add garlic, ginger, and curry powder for 1 minute.","Add the coconut milk, tomatoes, cauliflower, and salt; cover and simmer 8 min.","Add the chicken, kale, and peas; simmer 6–8 min until cooked through.","Serve over rice with lime and cilantro."],
+ tip:"Freeze the leftover coconut milk in an ice cube tray: 2 cubes is about ¼ cup."},
+D10:{n:"Cod in tomato-fennel broth with crushed potatoes",g:"Dinner",tag:'fish',slots:['d'],k:510,p:47,t:"25 min",eq:"Sauté pan with lid, microwave",
+ parts:{Protein:"Cod",Starch:"Crushed potatoes",Veg:"Fennel and tomatoes",Sauce:"Garlicky tomato-fennel broth"},
+ ing:[['cod',0.5],['fennel',0.5],['garlic',2],['diced',0.5],['broth',0.5],['oliveoil',2],['flakes',0.125,'pinch of red pepper flakes'],['lemon',0.25,'lemon wedge'],['parsley',0.0625,'1 tbsp chopped parsley'],['potato',1.33],['salt',0.5]],
+ steps:["Move the cod to the fridge the night before. Microwave the potatoes, covered, 6–7 min until tender.","Cook the sliced fennel in 1 tsp oil 5 min; add garlic and flakes, then the tomatoes and broth. Simmer 5 min.","Nestle in the salted cod, cover, and simmer 6–8 min until it flakes.","Crush the potatoes with the rest of the oil and salt; spoon the cod and broth over and finish with lemon and parsley."]},
+D11:{n:"Garlic-mushroom chicken with lemony kale & smashed potatoes",g:"Dinner",del:1,tag:'mustard',slots:['d'],k:525,p:62,t:"25 min",eq:"Sauté pan, microwave",
+ parts:{Protein:"Chicken breast",Starch:"Smashed potatoes",Veg:"Mushrooms and kale",Sauce:"Creamy mushroom pan sauce (yogurt, not cream)"},
+ ing:[['chicken',0.5,'½ lb chicken breast, pounded thin'],['mushrooms',1.5],['garlic',2],['broth',0.5],['brownmustard',1],['yogurt',0.125],['oliveoil',2],['kale',2],['lemon',0.25,'squeeze of lemon'],['potato',1],['salt',0.5],['blackpep',0.25]],
+ steps:["Move the chicken to the fridge the night before. Microwave the potatoes, covered, 6 min.","Sear the salted chicken in 1 tsp oil, 4–5 min per side; set aside.","Same pan: brown the mushrooms 5 min, add garlic, then the broth and mustard; simmer 2 min. Off heat, stir in the yogurt and return the chicken.","Wilt the kale in the rest of the oil with lemon. Smash the potatoes with salt and pepper."]},
+D12:{n:"Ginger-garlic chicken lettuce cups with rice & quick pickles",g:"Dinner",sr:1,del:1,tag:'asian',slots:['d'],k:510,p:41,t:"15 min",eq:"Sauté pan",
+ parts:{Protein:"Ginger-garlic ground chicken",Starch:"Rice",Veg:"Butter lettuce, cucumber, carrot",Sauce:"Soy-lime-honey"},
+ ing:[['groundchicken',0.33],['garlic',2],['ginger',0.33,'1 tsp grated ginger'],['soy',1],['honey',1],['lime',0.5],['scallion',2],['carrot',0.5,'½ carrot, shredded'],['cucumber',0.5],['rice',0.33,'⅓ cup dry rice, cooked (a Sunday portion)'],['lettuce',4],['oliveoil',1],['franks',1,"1 tsp Frank's or green hot sauce"]],
+ steps:["Toss the shredded carrot and cucumber with half the lime and a pinch of salt.","Brown the ground chicken in the oil, breaking it up, 5 min. Add the garlic and ginger 30 seconds, then the soy, honey, hot sauce, and remaining lime.","Fill lettuce leaves with rice, chicken, pickles, and scallions."]},
+D13:{n:"Smoky paprika chicken with roasted peppers, red onion & potatoes",g:"Dinner",tag:'sheet',slots:['d'],k:575,p:62,t:"35 min, one tray",eq:"Oven, foil",
+ parts:{Protein:"Smoked paprika chicken",Starch:"Baby potatoes",Veg:"Roasted peppers and red onion",Sauce:"Garlic-lemon yogurt"},
+ ing:[['chicken',0.5,'½ lb chicken breast'],['paprika',1],['garlicp',0.5],['lemon',0.25],['oliveoil',2],['salt',0.5],['pepper',1],['redonion',0.5],['potato',1.33],['yogurt',0.25],['garlic',1]],
+ steps:["Move the chicken to the fridge the night before. Heat the oven to 425°F with a foil-lined sheet pan.","Toss the potatoes, sliced pepper, and red onion wedges with half the oil and salt; roast 15 min.","Rub the chicken with smoked paprika, garlic powder, the rest of the oil, and salt; add to the pan and roast 18–22 min.","Stir the yogurt with grated garlic and lemon. Serve together."]},
+D14:{n:"Honey-soy glazed salmon with roasted broccoli",g:"Dinner",sr:1,tag:'asian',slots:['d'],k:590,p:38,t:"20 min",eq:"Toaster oven, foil, microwave",
+ parts:{Protein:"Glazed salmon",Starch:"Rice",Veg:"Roasted broccoli",Sauce:"Honey-soy-ginger glaze"},
+ ing:[['salmon',1,'1 salmon fillet (about ⅓ lb)'],['soy',1],['honey',1.5],['ginger',0.33,'1 tsp grated ginger'],['garlic',1],['broccoli',1.5],['oliveoil',1],['rice',0.25,'¼ cup dry rice, cooked (a Sunday portion)'],['scallion',1],['foil',1]],
+ steps:["Move the salmon to the fridge the night before. Heat the toaster oven to 425°F with a foil-lined tray.","Toss the broccoli with the oil and salt; roast 10 min.","Stir the soy, honey, ginger, and garlic. Add the salmon to the tray, brush with half the glaze, and roast 12 min; brush again for the last 2.","Serve over rice with scallions."]},
+D15:{n:"Grill-pan chicken with peach-jalapeño salsa, zucchini & quinoa",g:"Dinner",tag:'grill',slots:['d'],k:570,p:62,t:"25 min",eq:"Grill pan, small pot",
+ parts:{Protein:"Grilled chicken",Starch:"Quinoa",Veg:"Grilled zucchini",Sauce:"Peach-jalapeño salsa"},
+ ing:[['chicken',0.5,'½ lb chicken breast, pounded even'],['oliveoil',2],['chili',0.5],['salt',0.5],['peaches',0.75],['jalapeno',0.25],['redonion',0.125,'2 tbsp diced red onion'],['lime',0.5],['cilantro',0.0625,'1 tbsp cilantro'],['zucchini',1],['quinoa',0.25]],
+ steps:["Move the chicken to the fridge the night before. Start the quinoa: ¼ cup with ½ cup water, covered, 15 min.","Salsa: dice the thawed peaches and toss with jalapeño, red onion, lime, cilantro, and salt.","Rub the chicken and zucchini planks with oil, chili powder, and salt. Grill the chicken 5–6 min per side and the zucchini 2–3 min per side.","Plate over quinoa and pile on the salsa."]},
+D16:{n:"Seared cod with pineapple-cucumber salsa & coconut-lime rice",g:"Dinner",sr:1,del:1,tag:'tropical',slots:['d'],k:535,p:47,t:"20 min",eq:"Sauté pan, microwave",
+ parts:{Protein:"Seared cod",Starch:"Coconut-lime rice",Veg:"Haricots verts, cucumber",Sauce:"Pineapple-cucumber salsa"},
+ ing:[['cod',0.5],['paprika',0.5],['salt',0.5],['oliveoil',2],['pineapple',0.5],['cucumber',0.5],['redonion',0.125,'2 tbsp diced red onion'],['jalapeno',0.25],['lime',0.5],['cilantro',0.0625,'1 tbsp cilantro'],['rice',0.25,'¼ cup dry rice, cooked (a Sunday portion)'],['coconut',0.125,'2 tbsp light coconut milk'],['haricots',1]],
+ steps:["Move the cod to the fridge the night before. Salsa: diced pineapple, cucumber, red onion, jalapeño, half the lime, cilantro, salt.","Microwave the rice with the coconut milk and lime zest, covered, 2 min. Microwave the haricots verts 3 min.","Season the cod with smoked paprika and salt; sear in the oil 2–3 min per side.","Plate and top the cod with the salsa."]},
+D17:{n:"Ginger beef & broccoli stir-fry",g:"Dinner",sr:1,tag:'asian',slots:['d'],k:615,p:44,t:"20 min",eq:"Sauté pan, microwave",
+ parts:{Protein:"Thin-sliced sirloin",Starch:"Rice",Veg:"Broccoli",Sauce:"Ginger-garlic soy glaze"},
+ ing:[['sirloin',0.33],['broccoli',2],['garlic',2],['ginger',0.5,'1½ tsp grated ginger'],['soy',1.5],['honey',1],['cornstarch',1],['oliveoil',2],['rice',0.33,'⅓ cup dry rice, cooked (a Sunday portion)'],['scallion',1]],
+ steps:["Move the steak to the fridge the night before; slice it thin across the grain (easier half-frozen).","Stir the soy, honey, cornstarch, and 3 tbsp water. Microwave the broccoli 3 min.","Sear the beef in 1 tsp oil in a very hot sauté pan, 1–2 min; set aside. Add the rest of the oil, garlic, ginger, broccoli, then the sauce and beef; toss 1 min.","Serve over rice with scallions."],
+ tip:"Sliced steak in a stir-fry is a different experience from ground beef: tender and quick-seared."},
+D18:{n:"Stuffed delicata squash with chicken, apple & kale",g:"Dinner",tag:'fall',slots:['d'],k:555,p:43,t:"35 min",eq:"Toaster oven or oven, sauté pan",
+ parts:{Protein:"Ground chicken breast",Starch:"Delicata squash",Veg:"Kale, onion, apple",Sauce:"Mustard yogurt"},
+ ing:[['delicata',1,'1 delicata squash, halved and seeded'],['groundchicken',0.33],['oliveoil',2],['onion',0.25],['garlic',1],['apple',0.5,'½ apple, diced'],['kale',1.5],['paprika',0.5],['cinnamon',0.125,'pinch of cinnamon'],['salt',0.5],['walnuts',1],['yogurt',0.1875,'3 tbsp Greek yogurt'],['brownmustard',1]],
+ steps:["Rub the squash halves with 1 tsp oil and salt; roast cut-side down at 425°F, 20–25 min.","Brown the chicken and onion in the rest of the oil; add garlic, apple, smoked paprika, cinnamon, and kale until wilted.","Fill the squash, top with walnuts, and drizzle with yogurt stirred with mustard."]},
+D6B:{n:"Burger bowl with special sauce",g:"Dinner",tag:'bbq',lib:1,slots:['d'],k:535,p:43,t:"25 min",eq:"Toaster oven, grill pan",
+ parts:{Protein:"Beef burger patty",Starch:"Crispy baby potatoes",Veg:"Haricots verts and red cabbage",Sauce:"Special sauce"},
+ ing:[['burger',1,'1 beef burger patty (about ⅓ lb)'],['potato',1.5],['haricots',1],['oliveoil',1],['salt',0.5],['redcabbage',1],['ketchup',1],['brownmustard',1],['yogurt',0.125],['franks',0.5,"dash of Frank's"]],
+ steps:["Roast the potatoes and frozen haricots verts with the oil and salt at 425°F, 25 min.","Grill the patty from frozen, 4–5 min per side, to 160°F.","Stir ketchup, brown mustard, yogurt, and Frank's. Build the bowl with cabbage."],
+ tip:"Not in the rotation, since you prefer chicken. Swap it in any night to use up the burgers in your freezer."},
+
+/* ===== Sunday batches (make 4: 2 this week, 2 frozen for next week) ===== */
+X1:{n:"Smoky chicken & sweet potato chili (no beans)",g:"Batch",tag:'mex',slots:['d','l'],k:570,p:48,t:"Sunday batch, 50 min, makes 4",eq:"Large pot",batch:4,
+ sc:"Brown the chicken first if you have time (or skip it). Put everything except the corn, yogurt, and lime in the slow cooker; cook 6–7 hours on low. Stir in the corn for the last 20 min.",
+ parts:{Protein:"Ground chicken breast",Starch:"Sweet potato and corn",Veg:"Peppers, onion, tomatoes",Sauce:"Smoky chili base, yogurt on top"},
+ ing:[['groundchicken',0.33],['oliveoil',1],['onion',0.25],['pepper',0.5],['garlic',1],['chili',1.5],['paprika',0.5],['salt',0.5],['franks',1],['diced',0.5],['broth',0.25],['sweetpot',1.5],['corn',0.5],['yogurt',0.25],['lime',0.25,'lime wedge']],
+ steps:["The list opens at 4 servings. Brown the ground chicken with the salt in the oil in the large pot, 6–8 min.","Add the onion and pepper; cook 5 min. Stir in the garlic, chili powder, and smoked paprika for 1 minute.","Add the tomatoes, broth, Frank's, and ½-inch sweet potato cubes; simmer covered 25 min. Add the corn; simmer uncovered 10 min.","Serve with Greek yogurt and lime."],
+ tip:"Use the ground chicken in your freezer for the first batch. A 1 lb package makes 3 servings; add ⅓ lb more for 4."},
+X2:{n:"Moroccan-spiced chicken & butternut stew with apricots",g:"Batch",tag:'curry',slots:['d','l'],k:600,p:49,t:"Sunday batch, 45 min, makes 4",eq:"Large pot",batch:4,
+ sc:"Put everything except the quinoa, kale, lemon, and yogurt in the slow cooker; 5–6 hours on low. Stir in the quinoa and kale for the last 30 min.",
+ parts:{Protein:"Chicken breast",Starch:"Butternut squash and quinoa",Veg:"Onion, tomatoes, kale",Sauce:"Warm-spiced tomato broth, lemon yogurt on top"},
+ ing:[['chicken',0.33,'⅓ lb chicken breast, cubed'],['oliveoil',1],['onion',0.25],['garlic',2],['ginger',0.33,'1 tsp grated ginger'],['curry',1],['paprika',0.5],['cinnamon',0.25],['salt',0.5],['diced',0.5],['broth',0.5],['butternut',1.5],['apricots',2],['quinoa',0.25],['kale',1],['lemon',0.25,'lemon wedge'],['yogurt',0.1875,'3 tbsp Greek yogurt']],
+ steps:["The list opens at 4 servings. Cook the onion in the oil in the large pot, 5 min. Add the garlic, ginger, curry powder, smoked paprika, and cinnamon for 1 minute.","Add the tomatoes, broth, butternut cubes, apricots, and salt; simmer covered 15 min.","Add the chicken and dry quinoa; simmer covered 15 min. Stir in the kale for the last 3 min.","Serve with lemon and a spoon of yogurt."],
+ tip:"Sweet apricots and warm spices with chicken is a classic North African combination."},
+X3:{n:"Beef stew with mushrooms, carrots & potatoes",g:"Batch",tag:'stew',slots:['d','l'],k:540,p:37,t:"Sunday batch, 2 hours (mostly hands-off), makes 4",eq:"Large pot",batch:4,
+ sc:"Brown the beef (worth it for flavor), then put everything except the cornstarch and haricots verts in the slow cooker: 8 hours on low. Thicken and add the beans for the last 20 min on high.",
+ parts:{Protein:"Beef stew meat",Starch:"Baby potatoes",Veg:"Carrots, mushrooms, onion, haricots verts",Sauce:"Tomato-mustard gravy"},
+ ing:[['stewbeef',0.33],['oliveoil',1],['salt',0.5],['blackpep',0.25],['onion',0.25],['carrot',1,'1 carrot, in chunks'],['mushrooms',0.75],['garlic',1],['diced',0.25],['ketchup',0.5,'½ tbsp ketchup'],['brownmustard',1],['broth',1],['potato',1],['cornstarch',1],['haricots',0.75],['parsley',0.0625,'1 tbsp chopped parsley']],
+ steps:["The list opens at 4 servings. Pat the beef dry, season, and brown in the oil in two batches; set aside.","Cook the onion, carrot, and mushrooms 5 min. Add the garlic, tomatoes, ketchup, and mustard, scraping up the browned bits.","Return the beef, add the broth, cover, and simmer on low 1 hour 15 min. Add the potatoes for 30 min more.","Thicken with cornstarch stirred into 2 tbsp cold water; add the haricots verts for the last 5 min. Top with parsley."],
+ tip:"Stew is even better the next day."},
+X4:{n:"Lemony chicken orzo soup with kale & dill",g:"Batch",tag:'med',slots:['d','l'],k:490,p:45,t:"Sunday batch, 35 min, makes 4",eq:"Large pot",batch:4,
+ sc:"Put everything except the orzo, kale, lemon, and dill in the slow cooker; 4–5 hours on low. Shred the chicken, then add the orzo and kale for the last 20 min on high.",
+ parts:{Protein:"Chicken breast",Starch:"Orzo",Veg:"Carrot, onion, kale",Sauce:"Lemon-dill broth"},
+ ing:[['chicken',0.33],['oliveoil',1],['onion',0.25],['carrot',1],['garlic',2],['broth',2],['orzo',0.33],['kale',1.5],['lemon',0.5],['dill',0.0625,'1 tbsp chopped dill'],['salt',0.5],['blackpep',0.25]],
+ steps:["The list opens at 4 servings. Cook the onion and carrot in the oil in the large pot, 5 min; add garlic.","Add the broth and whole chicken breasts; simmer covered 15 min. Lift out the chicken and shred it.","Add the orzo; simmer 8 min. Return the chicken, add the kale for 2 min, then the lemon juice, dill, salt, and pepper."],
+ tip:"Orzo keeps soaking up broth in the freezer. Add a splash of water when you reheat."},
+
+/* ===== Snacks ===== */
+S1:{n:"Warm peach yogurt bowl",g:"Snack",slots:['s'],k:230,p:30,t:"2 min",eq:"Microwave",
+ ing:[['yogurt',1.25],['peaches',0.75],['honey',1]],steps:["Microwave the frozen peaches 1 minute until jammy. Spoon over the yogurt with honey."]},
+S2:{n:"Apple slices with peanut butter–yogurt dip",g:"Snack",slots:['s'],k:255,p:16,t:"2 min",eq:"One bowl",
+ ing:[['apple',1],['yogurt',0.5],['pb',1],['cinnamon',0.125,'pinch of cinnamon']],steps:["Stir the yogurt, peanut butter, and cinnamon into a thick dip. Slice the apple and dunk."]},
+S3:{n:"Chocolate protein pudding",g:"Snack",slots:['s'],k:185,p:30,t:"2 min",eq:"One bowl",
+ ing:[['yogurt',0.75],['whey',0.5],['honey',1],['almond',0.125]],steps:["Stir everything until smooth and thick."]},
+S4:{n:"Blueberry crumble yogurt bowl",g:"Snack",slots:['s'],k:250,p:26,t:"2 min",eq:"Microwave",
+ ing:[['yogurt',1],['blueberries',0.75],['oats',0.125,'2 tbsp oats'],['honey',1]],steps:["Microwave the blueberries 1 minute; spoon over the yogurt and top with oats and honey."]},
+S5:{n:"Kiwi & clementine yogurt with pepitas",g:"Snack",slots:['s'],k:220,p:21,t:"3 min",eq:"One bowl",
+ ing:[['yogurt',0.75],['kiwi',1],['clementine',1],['pepitas',1]],steps:["Top the yogurt with sliced kiwi (skin is edible on gold kiwis), clementine segments, and pepitas."]},
+S6:{n:"Pear, walnut & cinnamon yogurt",g:"Snack",slots:['s'],k:245,p:19,t:"2 min",eq:"One bowl",
+ ing:[['pear',1],['yogurt',0.75],['walnuts',1],['cinnamon',0.125,'pinch of cinnamon']],steps:["Slice the pear over the yogurt; top with walnuts and cinnamon."]},
+S7:{n:"Mango-lime frozen yogurt",g:"Snack",slots:['s'],k:200,p:18,t:"3 min",eq:"NutriBullet",
+ ing:[['mango',1],['yogurt',0.75],['lime',0.25,'squeeze of lime']],steps:["Blend the frozen mango, yogurt, and lime until thick like soft-serve. Eat right away."]},
+S8:{n:"Cherry-cocoa protein shake",g:"Snack",slots:['s'],k:190,p:25,t:"2 min",eq:"Shaker or NutriBullet",
+ ing:[['whey',1],['cherries',0.5],['almond',0.5]],steps:["Blend or shake with ice."]}
+};
+const BATCHES=['X1','X2','X3','X4'];
+const POOL={
+ b:['B1','B2','B3','B4','B5'],
+ l:['L1','L6','L3','L10','L4','L7','L2','L11','L12','L5','L9','L8'],
+ w:['W2','W4','W1','W5','W3'],
+ d:['D1','D5','D3','D2','D10','D13','D9','D4','D14','D18','D7','D11','D15','D12','D17','D8','D6','D16'],
+ s:['S1','S5','S2','S7','S4','S6','S3','S8']};
+const SLOTS=[['b','Breakfast'],['l','Lunch'],['s1','Afternoon snack'],['d','Dinner'],['s2','Evening snack']];
+const DEFAULT_PREFS=`How meals are built: one protein, one starch, one vegetable, and one sauce, usually in a bowl. Lots of flavor.
+Whole foods first: fresh and frozen produce, whole grains, Rummo protein pasta instead of whole wheat, real meat and fish, sauces made from yogurt, citrus, herbs, tahini, and nut butter.
+Variety: no meal repeats within about 3 weeks. New vegetables and fruits are welcome.
+Protein: chicken first, plus fish and shrimp. Willing to try other meats. Not a fan of ground beef; beef is good as stew or sliced steak.
+Cooking for one: Sunday prep covers weekday lunches (Sunday through Friday) and grains. Weekend lunches and dinners are made the day of, mostly in 15–35 min. Every other Sunday there's a batch pot (stew, chili, or soup). A slow cooker is coming in a few weeks; the batch recipes include slow cooker versions.
+Units: cups, tablespoons, and teaspoons. Meat by the pound or by the piece.
+Sauces already at home: green hot sauce, Frank's, brown mustard, honey mustard, chipotle mayo, Primal Kitchen ketchup, Nando's, Primal Kitchen buffalo. New sauces only a few at a time.
+Kept out: beans, cheese, eggs, dark-meat chicken, pork. Banana only in smoothies. Avocado only blended into a sauce.
+Kitchen: sauté pan with lid, small pot, large pot, grill pan, microwave, small NutriBullet, toaster oven, oven.
+Free meals: lunch every Wednesday. Dinner on Friday in odd weeks, Saturday in even weeks.`;
+
+const DEF={settings:{start:'2026-10-26',kcal:1850,protein:160,freeK:1200,freeLK:900,tripStart:'2026-10-25',tripEvery:14,why:'',startW:184,maint:2600,maintSd:200,goalLo:165,goalHi:170},weighins:[],rsnap:null,rFrom:null,
+plan:{},J:{},shop:{},locks:{},prefs:DEFAULT_PREFS,have:DEFAULT_HAVE,
+ifthen:["If I want something sweet after dinner, I'll have a fruit and yogurt snack.","If I'm hungry before lunch on a fasting day, I'll have black coffee or tea and wait 20 minutes.","If I go off plan at a meal, the next meal is just the next planned meal. No skipping to make up for it.","If I'm eating out on a non-free night, I'll order a lean protein with vegetables and skip the bread.","If I'm snacking out of boredom at night, I'll brush my teeth and take a 10-minute walk."]};
+
+/* ---------- Date helpers ---------- */
+const pad=n=>String(n).padStart(2,'0');
+const ds=d=>d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate());
+const pd=s=>{const[a,b,c]=s.split('-').map(Number);return new Date(a,b-1,c)};
+const addDays=(s,n)=>{const d=pd(s);d.setDate(d.getDate()+n);return ds(d)};
+const diffDays=(a,b)=>Math.round((pd(b)-pd(a))/86400000);
+const DN=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'],MN=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+const DFULL=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+const fmtD=s=>{const d=pd(s);return DN[d.getDay()]+', '+MN[d.getMonth()]+' '+d.getDate()};
+const fmtS=s=>{const d=pd(s);return MN[d.getMonth()]+' '+d.getDate()};
+const monday=s=>{const d=pd(s);d.setDate(d.getDate()-((d.getDay()+6)%7));return ds(d)};
+const TODAY=ds(new Date());
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+
+/* ---------- State & storage ---------- */
+const KEY='cutplan-v5',OLDKEYS=['cutplan-v4','cutplan-v3','cutplan-v2','cutplan-v1'];
+let S=JSON.parse(JSON.stringify(DEF));
+let ui={tab:'today',date:TODAY,week:null,trip:null,recipe:null,scale:1,timerEnd:0,timerDone:false,showExport:false,showImport:false};
+let storageOK=true,saveT=null;
+function mergeIn(d){S={...JSON.parse(JSON.stringify(DEF)),...d,settings:{...DEF.settings,...(d.settings||{})}};buildBase();}
+async function load(){
+  try{let r=null;try{r=await window.storage.get(KEY,false);}catch(e){}
+    if(r&&r.value){mergeIn(JSON.parse(r.value));}
+    else{for(const k of OLDKEYS){let o=null;try{o=await window.storage.get(k,false);}catch(e){}
+      if(o&&o.value){const d=JSON.parse(o.value);mergeIn({J:d.J||{},ifthen:d.ifthen||DEF.ifthen,have:d.have||DEF.have,shop:d.shop||{},settings:{why:(d.settings||{}).why||''}});break;}}}
+  }catch(e){}
+  if(S.prefs&&!/Rummo/.test(S.prefs))S.prefs+='\nPasta: Rummo protein pasta instead of whole wheat.';
+  if(!Object.keys(BASE).length)buildBase();
+  if(!window.storage)storageOK=false;setSaved();}
+function save(){clearTimeout(saveT);saveT=setTimeout(async()=>{
+  try{const r=await window.storage.set(KEY,JSON.stringify(S),false);storageOK=!!r;}catch(e){storageOK=false;}
+  setSaved();},350);}
+function setSaved(){document.getElementById('saved').textContent=storageOK?'Saved on this device':'Not saving: storage is blocked in this browser';}
+
+/* ---------- Scheduler: builds the default plan so meals don't repeat for ~3 weeks ---------- */
+let BASE={};
+function weekNo(s){const n=diffDays(S.settings.start,s);return n<0?0:Math.floor(n/7)+1;}
+function weekLetter(s){const n=weekNo(s);return n?String(n):'';}
+function batchFor(s){const w=weekNo(s);return w?BATCHES[Math.floor((w-1)/2)%BATCHES.length]:null;}
+function isTrip(s){const d=diffDays(S.settings.tripStart,s);return d>=0&&d%S.settings.tripEvery===0;}
+function lateInTrip(s){const d=diffDays(S.settings.tripStart,s);if(d<0)return false;return ((d-1)%S.settings.tripEvery+S.settings.tripEvery)%S.settings.tripEvery>=7;}
+function prepSunday(s){const d=pd(s);d.setDate(d.getDate()-d.getDay());return ds(d);}
+function buildBase(){
+  BASE={};const st=S.settings.start;const q={};Object.keys(POOL).forEach(k=>q[k]=[...POOL[k]]);const last={};
+  const snap=S.rsnap||{},fromN=S.rFrom?diffDays(st,S.rFrom):Infinity;
+  const pick=(k,n,gap,hard,soft)=>{const arr=q[k];
+    for(let pass=0;pass<4;pass++){for(let i=0;i<arr.length;i++){const id=arr[i];const lu=last[id];
+      const rated=n>=fromN&&snap[id]!==undefined;if(rated&&snap[id]<=2&&pass<3)continue;const g2=rated&&snap[id]>=4.5?Math.round(gap*0.7):gap;
+      const gapOk=pass>=2||lu===undefined||n-lu>=g2;const hardOk=pass>=3||!hard||hard(id);const softOk=pass>=1||!soft||soft(id);
+      if(gapOk&&hardOk&&softOk){arr.splice(i,1);arr.push(id);last[id]=n;return id;}}}
+    return arr[0];};
+  let prevL=null,prevD=null;
+  for(let n=0;n<730;n++){const s=addDays(st,n),wd=pd(s).getDay(),w=Math.floor(n/7)+1,odd=w%2===1,bat=BATCHES[Math.floor((w-1)/2)%BATCHES.length];
+    const p={b:'',l:'',s1:'',d:'',s2:''};
+    if(wd===2||wd===4)p.b=pick('b',n,14);
+    const lateD=lateInTrip(s),lateL=!isTrip(prepSunday(s));
+    const tagOf=id=>R[id]&&R[id].tag;
+    if((odd&&wd===2)||(!odd&&wd===3))p.d=bat;
+    else if((odd&&wd===5)||(!odd&&wd===6))p.d='FREE';
+    else p.d=pick('d',n,21,id=>tagOf(id)!==tagOf(prevD),id=>!(R[id].del&&lateD));
+    if(wd===3)p.l='FREE';
+    else if((odd&&wd===4)||(!odd&&wd===5))p.l=bat;
+    else if(wd===6)p.l=pick('w',n,28,id=>tagOf(id)!==tagOf(p.d),id=>!(R[id].del&&lateD));
+    else p.l=pick('l',n,18,id=>tagOf(id)!==tagOf(p.d)&&tagOf(id)!==tagOf(prevL),id=>!(R[id].del&&lateL));
+    const sub=['b','l','d'].reduce((a,sl)=>a+slotNut(s,p[sl],sl).k,0);
+    p.s1=pick('s',n,2);
+    if(sub+R[p.s1].k<1660)p.s2=pick('s',n,2,id=>id!==p.s1);
+    prevL=p.l;prevD=p.d;BASE[s]=p;}
+}
+
+/* ---------- Plan logic ---------- */
+function basePlan(s){return BASE[s]||null;}
+function lockOf(s){const k=prepSunday(s);return S.locks&&S.locks[k]?k:null;}
+function livePlan(s){const b=basePlan(s);return b?{...b,...(S.plan[s]||{})}:null;}
+function planFor(s){const k=lockOf(s);if(k&&S.locks[k].plan[s])return{...S.locks[k].plan[s]};return livePlan(s);}
+function lockWeek(sun){S.locks=S.locks||{};const plan={};for(let n=0;n<7;n++){const d=addDays(sun,n),p=livePlan(d);if(p)plan[d]=p;}const tasks=prepTasks(sun)||[];S.locks[sun]={plan,tasks,at:new Date().toISOString()};}
+function lockRange(k){return `${fmtS(k)} to ${fmtS(addDays(k,6))}`;}
+const getJ=s=>S.J[s]||{};
+function J(s){if(!S.J[s])S.J[s]={};const j=S.J[s];j.ate=j.ate||{};j.extras=j.extras||[];return j;}
+function slotNut(s,id,sl){if(!id)return{k:0,p:0};
+  if(id==='FREE'){const j=getJ(s);return sl==='l'?{k:+(j.freeLK||S.settings.freeLK),p:35}:{k:+(j.freeK||S.settings.freeK),p:40};}
+  const r=R[id];return r?{k:r.k,p:r.p}:{k:0,p:0};}
+function dayTotals(s){const p=planFor(s);let k=0,pr=0;if(!p)return{k,p:pr};SLOTS.forEach(([sl])=>{const n=slotNut(s,p[sl],sl);k+=n.k;pr+=n.p;});return{k,p:pr};}
+function eatenTotals(s){const p=planFor(s),j=getJ(s);let k=0,pr=0;if(p)SLOTS.forEach(([sl])=>{if(j.ate&&j.ate[sl]){const n=slotNut(s,p[sl],sl);k+=n.k;pr+=n.p;}});(j.extras||[]).forEach(x=>{k+=+x.k||0;pr+=+x.p||0;});return{k,p:pr};}
+function slotOptions(sl,cur){
+  const grp=sl==='s1'||sl==='s2'?'s':sl;let o='';
+  if(sl==='b')o+=`<option value=""${cur===''?' selected':''}>Skip: fasting until lunch</option>`;
+  else if(sl!=='d'&&sl!=='l')o+=`<option value=""${cur===''?' selected':''}>None</option>`;
+  Object.entries(R).forEach(([id,r])=>{if(r.slots.includes(grp)){const nm=(grp==='l'&&r.batch)?r.n+' (leftovers)':r.n;o+=`<option value="${id}"${cur===id?' selected':''}>${esc(nm)} (${r.k})</option>`;}});
+  if(sl==='d'||sl==='l')o+=`<option value="FREE"${cur==='FREE'?' selected':''}>Free ${sl==='l'?'lunch':'dinner'}</option>`;
+  return o;}
+function recName(id,sl){if(!id)return sl==='b'?'Fasting until lunch':'None';if(id==='FREE')return sl==='l'?'Free lunch':'Free dinner';if(sl==='l'&&R[id].batch)return R[id].n+' (leftovers)';return R[id].n;}
+
+/* ---------- Formatting ---------- */
+function fq(q){const w=Math.floor(q+1e-9),f=q-w;const m=[[0.125,'⅛'],[0.25,'¼'],[0.333,'⅓'],[0.5,'½'],[0.667,'⅔'],[0.75,'¾']];
+  if(f<0.03)return String(w||0);if(f>0.97)return String(w+1);let best=null;m.forEach(([v,t])=>{if(Math.abs(v-f)<0.03)best=t;});
+  if(best)return(w?w+' ':'')+best;return String(Math.round(q*10)/10);}
+function qty(c,q){switch(c.u){
+  case'lb':return`${fq(q)} lb`;
+  case'cup':return q<0.24?`${fq(q*16)} tbsp`:`${fq(q)} cup${q>1.01?'s':''}`;
+  case'tbsp':return q<0.9?`${fq(q*3)} tsp`:(q>=16?`${fq(q/16)} cup${q>16.2?'s':''}`:`${fq(q)} tbsp`);
+  case'tsp':{if(q>=3){const t=q/3;if(Math.abs(t*4-Math.round(t*4))<0.05)return`${fq(t)} tbsp`;if(q>=6)return`about ${fq(Math.round(t*2)/2)} tbsp`;}return`${fq(q)} tsp`;}
+  case'clove':return`${fq(q)} clove${q>1.01?'s':''}`;
+  case'scoop':return`${fq(q)} scoop${q>1.01?'s':''}`;
+  case'can':return`${fq(q)} can${q>1.01?'s':''}`;
+  case'sheet':return`${fq(q)} sheet${q>1.01?'s':''}`;
+  case'piece':return`${fq(q)}`;
+  default:return fq(q);}}
+function ingText(id,q,ov,sc){const c=CAT[id];let t;
+  if(ov&&sc===1)t=ov;else{q=q*sc;
+    if(c.u==='ea')t=`${fq(q)} ${c.r}${q>1.01&&!/[,)]/.test(c.r)?'s':''}`;
+    else if(c.u==='piece')t=`${fq(q)} ${q>1.01?c.pl:c.r}`;
+    else if(c.u==='clove')t=`${qty(c,q)} garlic`;
+    else t=`${qty(c,q)} ${c.r}`;}
+  return t+(c.opt?' (optional)':'');}
+function roundUp(c,q){if(c.u==='cup'||c.u==='lb'||c.u==='tbsp')return Math.ceil(q*4-0.05)/4;if(c.u==='tsp')return Math.ceil(q*2-0.05)/2;return Math.ceil(q-0.05);}
+
+/* ---------- Shopping ---------- */
+function trips(){const a=[];for(let i=0;i<60;i++)a.push(addDays(S.settings.tripStart,i*S.settings.tripEvery));return a;}
+function defaultTrip(){const t=trips();for(let i=0;i<t.length;i++){if(addDays(t[i],S.settings.tripEvery)>=TODAY)return i;}return 0;}
+function shopFor(t){const tot={};const add=(id,mult)=>R[id].ing.forEach(([k,q])=>{tot[k]=(tot[k]||0)+q*mult;});
+  for(let i=1;i<=S.settings.tripEvery;i++){const s=addDays(t,i),p=planFor(s);if(!p)continue;
+    SLOTS.forEach(([sl])=>{const id=p[sl];if(id&&id!=='FREE'&&!R[id].batch)add(id,1);});}
+  for(let i=0;i<S.settings.tripEvery;i++){const s=addDays(t,i);if(pd(s).getDay()!==0)continue;const tasks=prepBatches(s);tasks.forEach(id=>add(id,R[id].batch));}
+  return tot;}
+
+/* ---------- Sunday prep & nightly thaw ---------- */
+const GRAIN={rice:'Rice: rinse, then simmer with 1½× its volume of water, covered, 15 min (brown rice 40 min); rest 5 min.',quinoa:'Quinoa: rinse, simmer with 2× water, covered, 15 min.',farro:'Farro: boil in plenty of salted water like pasta, 25–30 min; drain.',orzo:'Orzo: boil in salted water 8 min; drain and toss with a few drops of oil.'};
+function prepBatches(s){const out=[];for(let n=1;n<=6;n++){const d=addDays(s,n),p=planFor(d);if(!p)continue;
+  ['l','d'].forEach(sl=>{const id=p[sl];if(id&&R[id]&&R[id].batch&&weekNo(d)%2===1&&!out.includes(id))out.push(id);});}return out;}
+function prepTasks(s){
+  if(pd(s).getDay()!==0)return null;
+  if(S.locks&&S.locks[s]&&S.locks[s].tasks)return S.locks[s].tasks;
+  const lunches=[];const grains={};const roast={},cut={};let chickenLb=0;const prots=[];const fridgeDays=[],freezeDays=[];
+  for(let n=0;n<=6;n++){const d=addDays(s,n),p=planFor(d);if(!p)continue;const dn=DFULL[pd(d).getDay()];
+    ['l','d'].forEach(sl=>{const id=p[sl];if(!id||id==='FREE'||!R[id])return;const r=R[id];
+      if(sl==='l'&&r.prep&&n<=5){lunches.push([id,dn]);(n<=3?fridgeDays:freezeDays).push(dn);
+        r.ing.forEach(([k,q])=>{if(k==='chicken')chickenLb+=q;});
+        (r.roast||[]).forEach(([k,q])=>roast[k]=(roast[k]||0)+q);(r.cut||[]).forEach(([k,q])=>cut[k]=(cut[k]||0)+q);
+        if(r.prot&&!prots.includes(r.prot))prots.push(r.prot);}
+      if(r.sr)r.ing.forEach(([k,q])=>{if(GRAIN[k])grains[k]=(grains[k]||0)+q;});});}
+  const t=[];
+  if(isTrip(s))t.push(['portion','Shopping day: portion chicken, fish, and meat into labeled freezer bags (⅓ lb or ½ lb, as the recipes use).']);
+  prepBatches(s).forEach(id=>t.push(['batch'+id,`Make the ${R[id].n} in the large pot (4 servings). Refrigerate 2 for this week and freeze 2 for next week.`]));
+  const byRec={};lunches.forEach(([id,dn])=>{(byRec[id]=byRec[id]||[]).push(dn);});
+  const chickRecs=Object.keys(byRec).filter(id=>R[id].mar);
+  if(chickenLb>0){t.push(['chicken',`Roast ${fq(Math.round(chickenLb*4)/4)} lb chicken breast on one foil-lined sheet pan at 425°F for 18–22 min, to 165°F. Season each piece for its bowl: `+chickRecs.map(id=>`${R[id].n} (×${byRec[id].length}): ${R[id].mar}`).join('; ')+'.']);}
+  prots.forEach((x,i)=>t.push(['prot'+i,x+'.']));
+  const rl=Object.entries(roast).map(([k,q])=>ingText(k,roundUp(CAT[k],q),null,1));
+  if(rl.length)t.push(['veg',`Vegetable tray (or two): roast ${rl.join(', ')} with a little olive oil and salt at 425°F until browned at the edges, 20–30 min.`]);
+  const cl=Object.entries(cut).map(([k,q])=>ingText(k,roundUp(CAT[k],q),null,1));
+  if(cl.length)t.push(['cut',`Wash and cut, then store in containers: ${cl.join(', ')}.`]);
+  Object.entries(grains).forEach(([k,q])=>{const r=Math.ceil(q*4)/4;t.push(['grain'+k,`Cook ${fq(r)} cup${r>1?'s':''} dry ${k} for this week's bowls. ${GRAIN[k]}`]);});
+  const jars=Object.entries(byRec).filter(([id])=>R[id].jar).map(([id,v])=>`${R[id].jar} ×${v.length}`);
+  if(jars.length)t.push(['sauces',`Mix the lunch sauces in small jars: ${jars.join('; ')}. Amounts are in each recipe.`]);
+  if(fridgeDays.length||freezeDays.length)t.push(['store',`Lunches in the fridge: ${fridgeDays.join(', ')||'none'}. In the freezer: ${freezeDays.join(', ')||'none'}. Cooked chicken keeps 3–4 days in the fridge, so later portions are frozen and the app reminds you to thaw them. Freeze extra grains in single portions.`]);
+  return t;}
+function thawList(s){
+  const t=addDays(s,1),p=planFor(t),out=[];if(!p)return out;const wd=pd(t).getDay();
+  ['l','d'].forEach(sl=>{const id=p[sl];if(!id||id==='FREE'||!R[id])return;const r=R[id];
+    if(r.batch){if(weekNo(t)%2===0)out.push(`1 frozen portion of ${r.n} (${sl==='l'?'lunch':'dinner'})`);return;}
+    if(sl==='l'&&r.prep){if(wd>=4)out.push(`Tomorrow's lunch portion: ${r.n}. Grains can go straight from the freezer to the microwave.`);return;}
+    r.ing.forEach(([k,q,ov])=>{const c=CAT[k];if(c.f&&k!=='burger')out.push(ingText(k,q,ov,1)+(sl==='l'?' for lunch':' for dinner'));});});
+  return out;}
+
+/* ---------- Views ---------- */
+function lockCard(sun){const L=S.locks&&S.locks[sun];
+  if(L)return `<div class="free" style="margin-top:10px"><b>Menu locked</b> for ${lockRange(sun)}. Swaps are off, and the prep checklist, shopping list, and thaw reminders stay exactly as they were when you locked. <button class="link small" data-act="unlock" data-date="${sun}">Unlock</button></div>`;
+  return `<div style="margin-top:10px"><button class="btn primary" data-act="lock" data-date="${sun}">Lock in menu for ${lockRange(sun)}</button><p class="hint">Do this once you've finished your swaps, before you shop and prep. Locking freezes Sunday through Saturday so nothing shifts after you've cooked.</p></div>`;}
+
+function rateRow(j,k,lbl,lo,hi){return`<div style="margin:8px 0"><div class="small">${lbl}</div><div class="chips" style="margin-top:4px">${[1,2,3,4,5].map(v=>`<button class="chip${+j[k]===v?' on':''}" data-act="rate" data-k="${k}" data-v="${v}" aria-label="${v}">${v}</button>`).join('')}</div><div class="row between hint" style="margin-top:2px"><span>1 = ${lo}</span><span>5 = ${hi}</span></div></div>`;}
+function vToday(){
+  const s=ui.date,p=planFor(s),j=getJ(s),st=S.settings,lk=lockOf(s);let h='';
+  h+=`<div class="datebar"><button class="iconbtn" data-act="dprev" aria-label="Previous day">‹</button><div class="mid"><strong>${fmtD(s)}</strong><span class="small muted">${p?`Day ${diffDays(st.start,s)+1}, week ${weekLetter(s)}`:'Before your plan starts'}${s!==TODAY?` <button class="link small" data-act="dtoday">Go to today</button>`:''}</span></div><button class="iconbtn" data-act="dnext" aria-label="Next day">›</button></div>`;
+  if(pd(s).getDay()===0&&prepTasks(s)&&prepTasks(s).length)h+=`<section class="sec"><h2>This week's menu</h2>${lockCard(s)}</section>`;
+  else if(lk)h+=`<p class="small muted" style="margin:0 0 10px">🔒 Menu locked for ${lockRange(lk)}. To change a meal, unlock it on ${fmtD(lk)} in the Week tab.</p>`;
+  h+=`<section class="sec"><h2>Why I'm doing this</h2>${st.why?`<p style="margin:0">${esc(st.why)}</p>`:`<p class="muted small" style="margin:0 0 6px">Write one sentence you'll want to read on a tough day.</p>`}<details><summary class="small">${st.why?'Edit':'Add your reason'}</summary><textarea data-in="why" placeholder="e.g. I want to feel lighter and have more energy by winter break">${esc(st.why)}</textarea></details></section>`;
+  if(!p){const n=diffDays(TODAY,st.start);
+    h+=`<section class="sec"><h2>Plan starts ${fmtD(st.start)}${n>0?` (in ${n} day${n>1?'s':''})`:''}</h2><ul style="padding-left:1.1em;margin:0">
+    <li>Shopping trip on ${fmtD(st.tripStart)}: your list is in Shop.</li><li>That day is also your first Sunday prep. The checklist appears here on ${fmtD(st.tripStart)}.</li></ul></section>`;}
+  if(p){const tot=dayTotals(s),ate=eatenTotals(s),max=Math.max(st.kcal,tot.k);
+    let bar='';SLOTS.forEach(([sl])=>{const id=p[sl];if(!id)return;const n=slotNut(s,id,sl);bar+=`<span class="${id==='FREE'?'seg-free':(j.ate&&j.ate[sl]?'seg-ate':'seg-plan')}" style="width:${n.k/max*100}%" title="${esc(recName(id,sl))}"></span>`;});
+    (j.extras||[]).forEach(x=>{bar+=`<span class="seg-ate" style="width:${(+x.k||0)/max*100}%"></span>`;});
+    h+=`<section class="sec"><div class="row between"><h2 style="margin:0">Today's food</h2><span class="kc">${ate.k} of ${tot.k} calories eaten</span></div>
+    <div class="plate" role="img" aria-label="Calories eaten versus planned">${bar}</div>
+    <p class="hint">Planned ${tot.k} calories and ${tot.p} g protein. Targets: about ${st.kcal} calories and ${st.protein} g protein.</p>`;
+    let first=true;
+    SLOTS.forEach(([sl,lbl])=>{const id=p[sl];if(!id&&sl!=='b')return;const n=slotNut(s,id,sl);const on=j.ate&&j.ate[sl];
+      const fk=sl==='l'?'freeLK':'freeK',fdef=sl==='l'?st.freeLK:st.freeK;
+      h+=`<div class="meal${first?' first':''}">${id?`<button class="tick${on?' on':''}" data-act="ate" data-slot="${sl}" aria-pressed="${!!on}" aria-label="Mark ${lbl} eaten">✓</button>`:'<span></span>'}
+      <div><div class="slotlbl">${lbl}</div>${id&&id!=='FREE'?`<button class="link" data-act="openR" data-id="${id}">${esc(recName(id,sl))}</button>`:`<span>${esc(recName(id,sl))}</span>`}</div>
+      <div class="kc">${id?n.k+' calories<br>'+n.p+' g protein':''}</div>
+      <select data-ch="slot" data-date="${s}" data-slot="${sl}" aria-label="Swap ${lbl}"${lk?' disabled':''}>${slotOptions(sl,id)}</select>
+      ${on&&id&&id!=='FREE'?`<div class="chips" style="grid-column:2/4;margin-top:6px;align-items:center"><span class="small muted">Rate it</span>${[1,2,3,4,5].map(v=>`<button class="chip${+((j.rt||{})[sl])===v?' on':''}" data-act="rrate" data-slot="${sl}" data-v="${v}" style="min-width:34px;padding:4px 9px" aria-label="Rate ${v} of 5">${v}</button>`).join('')}</div>`:''}
+      ${id==='FREE'?`<div class="free" style="grid-column:2/4">Free ${sl==='l'?'lunch':'dinner'}. Budget about ${fdef} calories, drinks included. Lead with protein, enjoy it, and go back to the plan at the next meal.<div class="row" style="margin-top:6px"><label class="small" for="fk${sl}">My estimate</label><input id="fk${sl}" type="number" inputmode="numeric" style="width:100px" data-ch="${fk}" value="${esc(j[fk]||fdef)}"> calories</div></div>`:''}
+      </div>`;first=false;});
+    h+=`<h3>Off-plan or extra</h3>`;
+    (j.extras||[]).forEach((x,i)=>{h+=`<div class="row between small" style="padding:4px 0"><span>${esc(x.n)}</span><span class="kc">${+x.k||0} calories, ${+x.p||0} g <button class="link" data-act="rmx" data-i="${i}">Remove</button></span></div>`;});
+    h+=`<div class="row" style="gap:6px"><input id="xn" placeholder="What" style="flex:2;min-width:110px"><input id="xk" type="number" inputmode="numeric" placeholder="calories" style="width:76px"><input id="xp" type="number" inputmode="numeric" placeholder="protein g" style="width:92px"><button class="btn" data-act="addx">Add</button></div></section>`;
+  }
+  h+=`<section class="sec"><h2>Check-ins</h2>
+  <h3 style="margin-top:0">Right before lunch</h3>
+  ${rateRow(j,'hL','How hungry are you?','not hungry','starving')}
+  <h3>Before bed</h3>
+  ${rateRow(j,'energy','Energy today, overall','drained','great')}
+  ${rateRow(j,'hard','Sticking to the plan today was','easy','very hard')}
+  <div class="row between" style="margin:10px 0"><span class="small">Water (glasses)</span><span class="row"><button class="iconbtn" data-act="water" data-v="-1" aria-label="Less water">−</button><b style="min-width:24px;text-align:center">${j.water||0}</b><button class="iconbtn" data-act="water" data-v="1" aria-label="More water">+</button></span></div>
+  <label class="field">Hours slept last night<input type="number" step="0.5" inputmode="decimal" data-ch="sleep" value="${esc(j.sleep||'')}"></label>
+  <label class="field" style="margin-top:8px">Notes: cravings, wins, what made today hard<textarea data-in="notes">${esc(j.notes||'')}</textarea></label></section>`;
+  const thaw=thawList(s),prep=prepTasks(s);
+  if(thaw.length||prep){h+=`<section class="sec"><h2>Stay ahead</h2>`;
+    if(prep&&prep.length){h+=`<h3 style="margin-top:0">Prep day checklist</h3>`;prep.forEach(([k,t])=>{const on=j.prep&&j.prep[k];h+=`<div class="shopitem${on?' done':''}"><button class="tick${on?' on':''}" data-act="prep" data-k="${k}" aria-pressed="${!!on}">✓</button><span class="nm" style="font-weight:400">${esc(t)}</span></div>`;});}
+    if(thaw.length)h+=`<h3>Tonight: move from freezer to fridge</h3><ul style="padding-left:1.1em;margin:0">${thaw.map(x=>`<li>${esc(x)}</li>`).join('')}</ul>`;
+    h+=`</section>`;}
+  const left=ui.timerEnd?Math.max(0,Math.round((ui.timerEnd-Date.now())/1000)):600;
+  h+=`<section class="sec"><h2>Craving right now?</h2><p class="small muted" style="margin:0 0 8px">Most cravings peak and fade within 10–15 minutes. Start the timer, drink a glass of water, and do something with your hands.</p>
+  <div class="row between"><span class="timer" id="timer">${Math.floor(left/60)}:${pad(left%60)}</span><button class="btn primary" data-act="timer">${ui.timerEnd?'Stop':'Start 10 minutes'}</button></div>
+  ${ui.timerDone?`<p class="small">Time's up. If you're still hungry, have your next planned snack. If not, you just won one.</p>`:''}
+  <h3>My if-then plans</h3><ol class="ifthen" style="padding-left:1.2em;margin:4px 0">${S.ifthen.map((t,i)=>`<li>${esc(t)} <button class="link small" data-act="rmif" data-i="${i}">Remove</button></li>`).join('')}</ol>
+  <div class="row" style="gap:6px"><input id="ifn" placeholder="If ___, then I'll ___" style="flex:1;min-width:160px"><button class="btn" data-act="addif">Add</button></div></section>`;
+  return h;}
+
+function vWeek(){
+  const ws=ui.week||(TODAY<S.settings.start?monday(S.settings.start):monday(TODAY));ui.week=ws;
+  let h=`<div class="datebar"><button class="iconbtn" data-act="wprev" aria-label="Previous week">‹</button><div class="mid"><strong>${fmtS(ws)} to ${fmtS(addDays(ws,6))}</strong><span class="small muted">${weekLetter(ws)?'Week '+weekLetter(ws):'Before the plan starts'} <button class="link small" data-act="wthis">This week</button></span></div><button class="iconbtn" data-act="wnext" aria-label="Next week">›</button></div>`;
+  let k=0,pr=0,n=0,fd=0,fl=0;for(let i=0;i<7;i++){const d=addDays(ws,i),p=planFor(d);if(!p)continue;const t=dayTotals(d);k+=t.k;pr+=t.p;n++;if(p.d==='FREE')fd++;if(p.l==='FREE')fl++;}
+  if(n){const over=fd>1||fl>1;h+=`<section class="sec"><div class="grid2"><div class="stat">Average per day<b>${Math.round(k/n)} calories</b></div><div class="stat">Average protein<b>${Math.round(pr/n)} g</b></div></div>
+  <p class="hint${over?' warn':''}">${fl} free lunch${fl===1?'':'es'} and ${fd} free dinner${fd===1?'':'s'} this week.${over?' Your plan allows one of each.':''} Change any meal below; your shopping list updates to match.</p></section>`;}
+  for(let i=0;i<7;i++){const d=addDays(ws,i),p=planFor(d);
+    h+=`<section class="sec daycard"><div class="row between"><h2 style="margin:0">${fmtD(d)}${d===TODAY?' <span class="pill">Today</span>':''}${pd(d).getDay()===0?' <span class="pill">Prep day</span>':''}</h2>${p?`<span class="kc">${dayTotals(d).k} calories, ${dayTotals(d).p} g</span>`:''}</div>`;
+    if(!p){h+=`<p class="muted small" style="margin:6px 0 0">${d===S.settings.tripStart?'Shopping and prep day.':'No plan yet.'}</p>${pd(d).getDay()===0&&prepTasks(d)&&prepTasks(d).length?lockCard(d):''}</section>`;continue;}
+    SLOTS.forEach(([sl,lbl])=>{const id=p[sl];h+=`<div class="meal"><div><div class="slotlbl">${lbl}</div>${id&&id!=='FREE'?`<button class="link" data-act="openR" data-id="${id}">${esc(recName(id,sl))}</button>`:`<span class="${id==='FREE'?'pill y':'muted'}">${esc(recName(id,sl))}</span>`}</div><div class="kc">${id?slotNut(d,id,sl).k:''}</div><select data-ch="slot" data-date="${d}" data-slot="${sl}" aria-label="${lbl} on ${fmtD(d)}"${lockOf(d)?' disabled':''}>${slotOptions(sl,id)}</select></div>`;});
+    if(S.plan[d]&&!lockOf(d))h+=`<button class="link small" data-act="resetday" data-date="${d}">Reset this day to the default plan</button>`;
+    if(pd(d).getDay()===0)h+=lockCard(d);
+    h+=`</section>`;}
+  return h;}
+
+function vShop(){
+  const T=trips();if(ui.trip===null)ui.trip=defaultTrip();const t=T[ui.trip],ev=S.settings.tripEvery;
+  const tot=shopFor(t),st=S.shop[t]||{};const chk=st.c||{},ex=st.x||[];const have=S.have||{};
+  let h=`<div class="datebar"><button class="iconbtn" data-act="tprev" aria-label="Previous trip">‹</button><div class="mid"><strong>Trip on ${fmtD(t)}</strong><span class="small muted">Covers ${fmtS(addDays(t,1))} to ${fmtS(addDays(t,ev))}. Next trip ${fmtS(addDays(t,ev))}.</span></div><button class="iconbtn" data-act="tnext" aria-label="Next trip">›</button></div>`;
+  const ids=Object.keys(CAT).filter(k=>tot[k]);const done=ids.filter(k=>chk[k]).length;
+  h+=`<section class="sec"><div class="row between"><span><b>${done}</b> of ${ids.length} items checked</span><button class="link small" data-act="uncheck">Uncheck all</button></div><p class="hint">Built from your Week plan, so it changes when you swap meals. Items marked "At home" are things you told me you already have: check how much is left, then tick them off or buy the difference.</p></section>`;
+  SECT.forEach(([sec,lbl])=>{const items=ids.filter(k=>CAT[k].s===sec);if(!items.length)return;
+    h+=`<section class="sec"><h2>${lbl}</h2>`;
+    items.forEach(k=>{const c=CAT[k],q=roundUp(c,tot[k]),on=chk[k],hv=have[k];let line;
+      const use=c.u==='ea'?fq(q):c.u==='piece'?`${fq(q)} ${q>1?c.b+'s':c.b}`:qty(c,q);
+      if(c.u==='lb')line=`About ${use}`;
+      else if(c.z&&c.u!=='piece'&&c.u!=='ea'){const n=Math.max(1,Math.ceil(tot[k]/c.z-0.05));line=`${n} × ${c.b}. Uses ${use}.`;}
+      else if(c.z)line=`${use}`;
+      else line=`Uses about ${use}${c.opt?' (optional)':''}`;
+      h+=`<div class="shopitem${on?' done':''}"><button class="tick${on?' on':''}" data-act="shopchk" data-k="${k}" aria-pressed="${!!on}" aria-label="Got ${esc(c.n)}">✓</button><div style="flex:1"><div class="nm">${esc(c.n)}</div><div class="small muted">${esc(line)}</div>${hv?`<div class="small"><span class="pill y">At home: ${esc(hv)}</span></div>`:''}</div><button class="link small" data-act="have" data-k="${k}">${hv?'Not at home':'At home'}</button></div>`;});
+    h+=`</section>`;});
+  h+=`<section class="sec"><h2>Your own items</h2>${ex.map((x,i)=>`<div class="shopitem${x.c?' done':''}"><button class="tick${x.c?' on':''}" data-act="exchk" data-i="${i}">✓</button><span class="nm" style="flex:1">${esc(x.n)}</span><button class="link small" data-act="exrm" data-i="${i}">Remove</button></div>`).join('')}
+  <div class="row" style="gap:6px;margin-top:6px"><input id="exn" placeholder="Add an item" style="flex:1;min-width:150px"><button class="btn" data-act="exadd">Add</button></div></section>`;
+  h+=`<section class="sec"><h2>Make two weeks of groceries last</h2><ul style="padding-left:1.1em;margin:0" class="small">
+  <li>Portion chicken and beef into freezer bags the day you shop. Today reminds you each night what to move to the fridge.</li>
+  <li>Coleslaw mix, onions, potatoes, sweet potatoes, apples, lemons, and limes all last the full two weeks.</li>
+  <li>Freeze bananas once they get spotty; they go straight into the shakes.</li>
+  <li>Store brands are the same product for less: Greek yogurt, frozen vegetables and fruit, rice, oats, canned tomatoes, broth, marinara.</li>
+  <li>New sauces this plan needs: only low-sodium soy sauce and a jar of marinara. The rest comes from your fridge.</li></ul></section>`;
+  return h;}
+
+function vRecipes(){
+  let h=`<section class="sec"><h2>My food preferences</h2><p style="margin:0;white-space:pre-line" class="small">${esc(S.prefs)}</p><details><summary class="small">Edit</summary><textarea data-in="prefs" style="min-height:180px">${esc(S.prefs)}</textarea></details></section>`;
+  h+=`<p class="small muted" style="margin:0 0 10px">Calories and protein are per serving and include every sauce, oil, and seasoning listed. Tap any recipe for the full ingredient list and steps. They're estimates; brands vary by about 10%.</p>`;
+  ['Breakfast','Lunch','Weekend lunch','Dinner','Batch','Snack'].forEach(g=>{
+    h+=`<section class="sec"><h2>${g==='Breakfast'?'Breakfast (Tuesday and Thursday)':g==='Lunch'?'Weekday lunch (Sunday prep)':g==='Weekend lunch'?'Weekend lunch (made fresh)':g==='Snack'?'Snacks':g==='Batch'?'Sunday batches (every other week; slow cooker versions included)':'Dinner (made the day of)'}</h2><div class="rlist">`;
+    Object.entries(R).filter(([,r])=>r.g===g).forEach(([id,r])=>{h+=`<button data-act="openR" data-id="${id}"><span>${esc(r.n)}<br><span class="small muted">${esc(r.t)}. ${esc(r.eq)}</span></span><span class="kc">${r.k} calories<br>${r.p} g protein${r.lib?'<br>not in rotation':''}</span></button>`;});
+    h+=`</div></section>`;});
+  return h;}
+
+function avg(a){return a.length?a.reduce((x,y)=>x+y,0)/a.length:null;}
+function vProgress(){
+  const st=S.settings;let h='';
+  let planned=0,ate=0,logged=0;for(let i=0;i<7;i++){const d=addDays(TODAY,-i),p=planFor(d),j=getJ(d);if(j.hL||j.energy||j.hard||(j.ate&&Object.values(j.ate).some(Boolean))||j.notes)logged++;if(!p)continue;SLOTS.forEach(([sl])=>{if(p[sl]){planned++;if(j.ate&&j.ate[sl])ate++;}});}
+  let streak=0;for(let i=0;i<400;i++){const j=getJ(addDays(TODAY,-i));const any=j.hL||j.energy||j.hard||(j.ate&&Object.values(j.ate).some(Boolean));if(any)streak++;else if(i>0)break;}
+  h+=`<section class="sec"><h2>Last 7 days</h2><div class="grid2"><div class="stat">Meals checked off<b>${planned?Math.round(ate/planned*100)+'%':'None yet'}</b></div><div class="stat">Days logged<b>${logged} of 7</b></div><div class="stat">Logging streak<b>${streak} day${streak===1?'':'s'}</b></div></div></section>`;
+  const fast=[],bfast=[],en=[],hd=[];
+  for(let i=0;i<14;i++){const d=addDays(TODAY,-i),p=planFor(d),j=getJ(d);if(!p)continue;if(j.hL)(p.b?bfast:fast).push(+j.hL);if(j.energy)en.push(+j.energy);if(j.hard)hd.push(+j.hard);}
+  const f=avg(fast),b=avg(bfast),e=avg(en),x=avg(hd);const tips=[];
+  if(f!==null&&fast.length>=3&&f>=4)tips.push('You are very hungry before lunch on fasting days. Try a small high-protein breakfast on those days too, or move the afternoon snack to late morning. Total calories are what matter; skipping breakfast is optional.');
+  if(f!==null&&b!==null&&fast.length>=3&&bfast.length>=2&&f-b>=1.5)tips.push('Fasting days run much hungrier than breakfast days. That is a sign the fasting window may not suit you.');
+  if(e!==null&&en.length>=4&&e<=2.2)tips.push('Energy has been low. Check sleep and water first. If it stays low for a week, add about 150 calories a day.');
+  if(x!==null&&hd.length>=4&&x>=3.8)tips.push('The plan is feeling hard. Read back through your notes for the common thread, and swap out any meal you are not enjoying.');
+  const fmt=v=>v===null?'No data':v.toFixed(1)+' / 5';
+  h+=`<section class="sec"><h2>Check-ins, last 14 days</h2><div class="grid2"><div class="stat">Hunger before lunch, fasting days<b>${fmt(f)}</b></div><div class="stat">Hunger before lunch, breakfast days<b>${fmt(b)}</b></div><div class="stat">Energy<b>${fmt(e)}</b></div><div class="stat">How hard the plan felt<b>${fmt(x)}</b></div></div>
+  ${tips.length?tips.map(t=>`<p class="free">${esc(t)}</p>`).join(''):`<p class="hint">Patterns show up here after a few days of check-ins.</p>`}</section>`;
+  const fl=(k,l,t='number')=>`<label class="field">${l}<input type="${t}" data-set="${k}" value="${esc(st[k])}"></label>`;
+  h+=`<section class="sec"><h2>Settings</h2><div class="grid2">${fl('kcal','Daily calorie target')}${fl('protein','Protein target (g)')}${fl('freeLK','Free lunch budget (kcal)')}${fl('freeK','Free dinner budget (kcal)')}${fl('start','Plan start (a Monday)','date')}${fl('tripStart','First shopping trip','date')}${fl('tripEvery','Days between trips')}</div>
+  <p class="hint">The 2-week meal rotation starts on the plan start date. Shopping lists cover the days between trips.</p></section>`;
+  h+=`<section class="sec"><h2>Back up your data</h2><p class="small muted" style="margin:0 0 8px">Your data saves inside the Claude app on this device. Copy a backup now and then.</p>
+  <div class="row"><button class="btn" data-act="export">${ui.showExport?'Hide backup':'Show backup'}</button><button class="btn" data-act="import">${ui.showImport?'Cancel':'Restore from backup'}</button></div>
+  ${ui.showExport?`<textarea readonly id="exp" style="margin-top:8px">${esc(JSON.stringify(S))}</textarea><button class="btn" data-act="copy" style="margin-top:6px">Copy backup</button>`:''}
+  ${ui.showImport?`<textarea id="imp" placeholder="Paste a backup here" style="margin-top:8px"></textarea><button class="btn primary" data-act="doimport" style="margin-top:6px">Replace my data with this backup</button>`:''}
+  <p style="margin:12px 0 0"><button class="link warn small" data-act="reset">Erase all data</button></p></section>`;
+  return h;}
+
+function vRecipe(){
+  const id=ui.recipe;if(!id)return'';const r=R[id],sc=ui.scale;
+  return`<div class="sheet" data-act="closeR"><div class="in" role="dialog" aria-modal="true" aria-label="${esc(r.n)}" data-stop="1">
+  <div class="row between" style="align-items:flex-start;flex-wrap:nowrap"><h2>${esc(r.n)}</h2><button class="iconbtn" data-act="closeR" aria-label="Close">×</button></div>
+  <p class="small muted" style="margin:0 0 6px">${r.k} calories and ${r.p} g protein per serving. ${esc(r.t)}.</p>
+  <p class="small" style="margin:0 0 10px">Uses: ${esc(r.eq)}</p>
+  ${r.parts?`<div class="grid2" style="margin-bottom:10px">${Object.entries(r.parts).map(([k,v])=>`<div class="stat">${k}<b style="font-size:.95rem">${esc(v)}</b></div>`).join('')}</div>`:''}
+  <div class="chips" style="margin-bottom:6px">${[1,2,4].map(v=>`<button class="chip${sc===v?' on':''}" data-act="scale" data-v="${v}">${v} serving${v>1?'s':''}</button>`).join('')}</div>
+  <h3>Ingredients</h3><ul class="ing">${r.ing.map(([k,q,ov])=>`<li>${esc(ingText(k,q,ov,sc))}</li>`).join('')}</ul>
+  <h3>Steps</h3><ol class="steps">${r.steps.map(s=>`<li>${esc(s)}</li>`).join('')}</ol>
+  ${r.sc?`<h3>Slow cooker version</h3><p class="small">${esc(r.sc)}</p>`:''}${r.tip?`<p class="free">${esc(r.tip)}</p>`:''}</div></div>`;}
+
+/* ---------- Analytics ---------- */
+function rng(seed){let a=seed>>>0;return()=>{a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296;};}
+function gauss(r){let u=0;while(!u)u=r();return Math.sqrt(-2*Math.log(u))*Math.cos(2*Math.PI*r());}
+const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+const mean=a=>a.length?a.reduce((x,y)=>x+y,0)/a.length:null;
+const sd=a=>{if(a.length<2)return 0;const m=mean(a);return Math.sqrt(a.reduce((s,v)=>s+(v-m)**2,0)/(a.length-1));};
+const f1=v=>v===null||isNaN(v)?'–':(Math.round(v*10)/10).toFixed(1);
+const fint=v=>v===null||isNaN(v)?'–':Math.round(v).toLocaleString();
+
+/* What was actually eaten on a day. Unlogged days fall back to the plan. Free meals count at your estimate. */
+function eatenDay(ctx,s){const p=planFor(s);if(!p)return null;const j=ctx.J[s]||{},ate=j.ate||{};
+  const logged=Object.values(ate).some(Boolean)||(j.extras||[]).length>0;
+  let k=0,pr=0,skipped=0,over=0,ext=0,planned=0,plannedP=0;
+  SLOTS.forEach(([sl])=>{const id=p[sl];if(!id)return;
+    if(id==='FREE'){const b=sl==='l'?S.settings.freeLK:S.settings.freeK;const est=+(j[sl==='l'?'freeLK':'freeK']||b);planned+=b;plannedP+=sl==='l'?35:40;k+=est;pr+=sl==='l'?35:40;over+=est-b;return;}
+    const r=R[id];planned+=r.k;plannedP+=r.p;if(ate[sl]){k+=r.k;pr+=r.p;}else skipped-=r.k;});
+  (j.extras||[]).forEach(x=>{k+=+x.k||0;pr+=+x.p||0;ext+=+x.k||0;});
+  return{logged,k:logged?k:planned,p:logged?pr:plannedP,planned,plannedP,skipped:logged?skipped:0,over:logged?over:0,ext:logged?ext:0};}
+
+/* Sample data so the dashboards can be previewed before there is real data. */
+let DEMO=null;
+function demoCtx(){if(DEMO)return DEMO;const r=rng(7),st=S.settings,start=st.start,days=35,today=addDays(start,days-1);const Jd={},wis=[];
+  const recMean={};Object.keys(R).forEach((id,i)=>recMean[id]=2.4+rng(i*97+13)()*2.5);
+  let w=st.startW,prevDinP=50;const trueT=st.maint-120;
+  for(let n=0;n<days;n++){const s=addDays(start,n),p=planFor(s),wd=pd(s).getDay();const j={ate:{},extras:[],rt:{}};
+    j.sleep=Math.round(clamp(7+gauss(r)*0.9,4.5,9.5)*2)/2;
+    SLOTS.forEach(([sl])=>{const id=p[sl];if(!id)return;
+      if(id==='FREE'){j.ate[sl]=true;const b=sl==='l'?st.freeLK:st.freeK;j[sl==='l'?'freeLK':'freeK']=Math.round(b*(1.2+gauss(r)*0.2)/10)*10;return;}
+      if(r()>(sl==='s2'?0.22:0.06)){j.ate[sl]=true;if(sl==='l'||sl==='d'||sl==='b')j.rt[sl]=clamp(Math.round(recMean[id]+gauss(r)*0.6),1,5);}});
+    if(r()<(wd===5||wd===6||wd===0?0.6:0.22))j.extras.push({n:['Chips','Beer','Cookies','Trail mix','Ice cream','Pizza slice'][Math.floor(r()*6)],k:Math.round((150+r()*320)/10)*10,p:Math.round(r()*8)});
+    const fasting=!p.b;j.hL=clamp(Math.round(2.3+(fasting?0.9:0)-0.045*(prevDinP-50)-0.4*(j.sleep-7)+gauss(r)*0.55),1,5);
+    j.energy=clamp(Math.round(3.3+0.45*(j.sleep-7)+gauss(r)*0.6),1,5);
+    j.hard=clamp(Math.round(2.3+(wd===5||wd===6?0.8:0)-0.3*(j.sleep-7)+gauss(r)*0.6),1,5);
+    Jd[s]=j;prevDinP=p.d&&p.d!=='FREE'&&R[p.d]?R[p.d].p:40;
+    const e=eatenDay({J:Jd},s).k;w-=(trueT-10*(st.startW-w)-e*1.1)/3500;
+    if(n===13||n===27)wis.push({d:s,w:Math.round((w+gauss(r)*0.6)*10)/10});}
+  DEMO={J:Jd,today,demo:true,weighins:wis};return DEMO;}
+function actx(){return ui.demo?demoCtx():{J:S.J,today:TODAY,demo:false,weighins:S.weighins||[]};}
+
+/* Dashboard 1: Monte Carlo energy-balance model, reweighted by any weigh-ins (importance sampling). */
+function projection(ctx){const st=S.settings,start=st.start,H=300,nObs=clamp(diffDays(start,ctx.today)+1,0,H);
+  const intake=[];let logged=0,obs=0;
+  for(let n=0;n<H;n++){const s=addDays(start,n),e=eatenDay(ctx,s);if(!e){intake.push(st.kcal);continue;}
+    if(n<nObs){intake.push(e.k);obs++;if(e.logged)logged++;}else intake.push(e.planned);}
+  const N=500,r=rng(42),sims=[];
+  for(let i=0;i<N;i++){const T0=st.maint+gauss(r)*st.maintSd,W0=st.startW+gauss(r)*1.5,b=0.08+gauss(r)*0.08;let w=W0;const tr=new Float32Array(H);
+    for(let n=0;n<H;n++){const tdee=T0-10*(W0-w);w-=(tdee-intake[n]*(1+b))/3500;tr[n]=w;}
+    sims.push({T0,b,tr,wt:1});}
+  const wis=(ctx.weighins||[]).filter(x=>{const n=diffDays(start,x.d);return n>=0&&n<H;});
+  if(wis.length){sims.forEach(sm=>{let ll=0;wis.forEach(x=>{const z=(x.w-sm.tr[diffDays(start,x.d)])/2;ll-=0.5*z*z;});sm.ll=ll;});
+    const mx=Math.max(...sims.map(s=>s.ll));sims.forEach(s=>s.wt=Math.exp(s.ll-mx));}
+  const tw=sims.reduce((a,s)=>a+s.wt,0);sims.forEach(s=>s.wt/=tw);const ess=1/sims.reduce((a,s)=>a+s.wt*s.wt,0);
+  const wq=(vals,qs)=>{const idx=vals.map((_,i)=>i).sort((a,b)=>vals[a]-vals[b]);const out=[];let c=0,k=0;
+    for(const i of idx){c+=sims[i].wt;while(k<qs.length&&c>=qs[k]){out[k]=vals[i];k++;}}while(k<qs.length)out[k++]=vals[idx[idx.length-1]];return out;};
+  const band=[];for(let n=0;n<H;n++)band.push(wq(sims.map(s=>s.tr[n]),[0.1,0.5,0.9]));
+  const cross=t=>wq(sims.map(s=>{for(let n=0;n<H;n++)if(s.tr[n]<=t)return n;return H;}),[0.1,0.5,0.9]);
+  const recent=[];for(let i=0;i<14;i++){const s=addDays(ctx.today,-i),e=eatenDay(ctx,s);if(e&&e.logged&&diffDays(start,s)>=0)recent.push(e.k);}
+  return{band,H,nObs,obs,logged,start,wis,ess,crossTop:cross(st.goalHi),crossMid:cross((st.goalLo+st.goalHi)/2),tdee:wq(sims.map(s=>s.T0),[0.1,0.5,0.9]),bias:wq(sims.map(s=>s.b),[0.1,0.5,0.9]),recentIntake:mean(recent)};}
+function chartBand(pr){const W=340,Hh=210,pl=34,prr=8,pt=12,pb=24,st=S.settings;
+  const D=Math.min(pr.H-1,Math.max(60,pr.nObs+21,(pr.crossMid[2]<pr.H?pr.crossMid[2]:pr.H-1)+10));
+  let lo=st.goalLo-2,hi=st.startW+2;for(let n=0;n<=D;n++){lo=Math.min(lo,pr.band[n][0]);hi=Math.max(hi,pr.band[n][2]);}lo=Math.floor(lo);hi=Math.ceil(hi);
+  const x=n=>pl+n/D*(W-pl-prr),y=v=>pt+(hi-v)/(hi-lo)*(Hh-pt-pb);
+  let g=`<svg class="chart" viewBox="0 0 ${W} ${Hh}" width="100%" role="img" aria-label="Projected weight with 80 percent band">`;
+  g+=`<rect x="${pl}" y="${y(st.goalHi)}" width="${W-pl-prr}" height="${y(st.goalLo)-y(st.goalHi)}" fill="var(--mustard-soft)"/>`;
+  [hi,Math.round((hi+lo)/2),lo].forEach(v=>g+=`<line x1="${pl}" x2="${W-prr}" y1="${y(v)}" y2="${y(v)}" stroke="var(--line)"/><text x="${pl-5}" y="${y(v)+3}" text-anchor="end">${v}</text>`);
+  const up=[],dn=[],md=[];for(let n=0;n<=D;n++){const X=x(n).toFixed(1);up.push(X+','+y(pr.band[n][2]).toFixed(1));dn.push(X+','+y(pr.band[n][0]).toFixed(1));md.push(X+','+y(pr.band[n][1]).toFixed(1));}
+  g+=`<polygon points="${up.join(' ')} ${dn.reverse().join(' ')}" fill="var(--herb-soft)"/><polyline points="${md.join(' ')}" fill="none" stroke="var(--herb)" stroke-width="2.5"/>`;
+  if(pr.nObs>0&&pr.nObs-1<=D)g+=`<line x1="${x(pr.nObs-1)}" x2="${x(pr.nObs-1)}" y1="${pt}" y2="${Hh-pb}" stroke="var(--muted)" stroke-dasharray="3 3"/><text x="${x(pr.nObs-1)+3}" y="${pt+8}">today</text>`;
+  pr.wis.forEach(wi=>{const n=diffDays(pr.start,wi.d);if(n<=D)g+=`<circle cx="${x(n)}" cy="${y(wi.w)}" r="3.5" fill="var(--ink)"/>`;});
+  return g+`<text x="${pl}" y="${Hh-6}">${fmtS(pr.start)}</text><text x="${W-prr}" y="${Hh-6}" text-anchor="end">${fmtS(addDays(pr.start,D))}</text></svg>`;}
+function barChart(labels,vals,{fmt=v=>fint(v),h=170,color}={}){const W=340,pl=10,pr=10,pt=16,pb=30;let lo=Math.min(0,...vals),hi=Math.max(0,...vals);if(hi===lo)hi=lo+1;const pad=(hi-lo)*0.15;if(hi>0)hi+=pad;if(lo<0)lo-=pad;
+  const y=v=>pt+(hi-v)/(hi-lo)*(h-pt-pb),bw=(W-pl-pr)/labels.length;let g=`<svg class="chart" viewBox="0 0 ${W} ${h}" width="100%" role="img">`;
+  g+=`<line x1="${pl}" x2="${W-pr}" y1="${y(0)}" y2="${y(0)}" stroke="var(--muted)"/>`;
+  vals.forEach((v,i)=>{const x0=pl+i*bw+bw*0.16,w=bw*0.68,y0=Math.min(y(0),y(v)),hh=Math.max(1,Math.abs(y(v)-y(0)));const c=color?color(v,i):(v>=0?'var(--mustard)':'var(--herb)');
+    g+=`<rect x="${x0}" y="${y0}" width="${w}" height="${hh}" rx="2" fill="${c}"/><text x="${x0+w/2}" y="${v>=0?y0-4:y0+hh+11}" text-anchor="middle">${fmt(v)}</text><text x="${x0+w/2}" y="${h-10}" text-anchor="middle">${labels[i]}</text>`;});
+  return g+'</svg>';}
+function scatter(pts,{xl='',yl='',fit=null,ymin=1,ymax=5}={}){const W=340,H=200,pl=34,pr=10,pt=10,pb=30;if(!pts.length)return'';
+  let xs=pts.map(p=>p[0]);let x0=Math.min(...xs),x1=Math.max(...xs);if(x1===x0){x0-=1;x1+=1;}const px=(x1-x0)*0.08;x0-=px;x1+=px;
+  const x=v=>pl+(v-x0)/(x1-x0)*(W-pl-pr),y=v=>pt+(ymax+0.5-v)/(ymax-ymin+1)*(H-pt-pb);const r=rng(3);
+  let g=`<svg class="chart" viewBox="0 0 ${W} ${H}" width="100%" role="img">`;
+  for(let v=ymin;v<=ymax;v++)g+=`<line x1="${pl}" x2="${W-pr}" y1="${y(v)}" y2="${y(v)}" stroke="var(--line)"/><text x="${pl-6}" y="${y(v)+3}" text-anchor="end">${v}</text>`;
+  pts.forEach(p=>{g+=`<circle cx="${x(p[0])+(r()-0.5)*4}" cy="${y(p[1])+(r()-0.5)*8}" r="3.2" fill="var(--herb)" opacity=".65"/>`;});
+  if(fit)g+=`<line x1="${x(x0)}" y1="${y(fit.a+fit.b*x0)}" x2="${x(x1)}" y2="${y(fit.a+fit.b*x1)}" stroke="var(--mustard)" stroke-width="2.5"/>`;
+  return g+`<text x="${pl}" y="${H-8}">${fint(x0+px)}</text><text x="${W-pr}" y="${H-8}" text-anchor="end">${fint(x1-px)}</text><text x="${(W+pl)/2}" y="${H-8}" text-anchor="middle">${xl}</text></svg>`;}
+function matInv(M){const n=M.length,A=M.map((r,i)=>[...r,...Array.from({length:n},(_,j)=>i===j?1:0)]);
+  for(let c=0;c<n;c++){let p=c;for(let r=c+1;r<n;r++)if(Math.abs(A[r][c])>Math.abs(A[p][c]))p=r;if(Math.abs(A[p][c])<1e-9)return null;[A[c],A[p]]=[A[p],A[c]];
+    const d=A[c][c];for(let j=0;j<2*n;j++)A[c][j]/=d;for(let r=0;r<n;r++)if(r!==c){const f=A[r][c];for(let j=0;j<2*n;j++)A[r][j]-=f*A[c][j];}}
+  return A.map(r=>r.slice(n));}
+function ols(X,y){const k=X[0].length,n=X.length;if(n<=k)return null;const XtX=Array.from({length:k},()=>Array(k).fill(0)),Xty=Array(k).fill(0);
+  X.forEach((r,i)=>{for(let a=0;a<k;a++){Xty[a]+=r[a]*y[i];for(let b=0;b<k;b++)XtX[a][b]+=r[a]*r[b];}});
+  const inv=matInv(XtX);if(!inv)return null;const beta=inv.map(row=>row.reduce((s,v,j)=>s+v*Xty[j],0));
+  const res=y.map((v,i)=>v-X[i].reduce((s,x,j)=>s+x*beta[j],0)),rss=res.reduce((a,v)=>a+v*v,0),my=mean(y),tss=y.reduce((a,v)=>a+(v-my)**2,0);
+  const s2=rss/(n-k);return{beta,se:inv.map((row,i)=>Math.sqrt(Math.max(0,row[i]*s2))),n,r2:tss?1-rss/tss:0};}
+
+function nextSundayAfter(s){let d=addDays(s,1);while(pd(d).getDay()!==0)d=addDays(d,1);return d;}
+function ratingStats(ctx){const st={};const days=Math.max(0,diffDays(S.settings.start,ctx.today));
+  for(let n=0;n<=days;n++){const s=addDays(S.settings.start,n),p=planFor(s),j=ctx.J[s]||{};if(!p)continue;const rt=j.rt||{};
+    Object.entries(rt).forEach(([sl,v])=>{const id=p[sl];if(!v||!id||id==='FREE'||!R[id])return;const o=st[id]=st[id]||{r:[],nh:[]};o.r.push(+v);
+      if(sl==='d'){const nj=ctx.J[addDays(s,1)]||{};if(nj.hL)o.nh.push(+nj.hL);}});}
+  return st;}
+
+function vAnalytics(){const ctx=actx(),st=S.settings;let h='';
+  h+=`<section class="sec"><div class="row between"><h2 style="margin:0">${ctx.demo?'Sample data preview':'Your data'}</h2><button class="btn" data-act="demo">${ctx.demo?'Show my data':'Preview with sample data'}</button></div>${ctx.demo?`<p class="hint">Five simulated weeks of logging (with some realistic slip-ups) so you can see how each dashboard reads. Nothing here is saved or changes your plan.</p>`:`<p class="hint">Everything here comes from what you check off, your extras, free-meal estimates, check-ins, and ratings.</p>`}</section>`;
+
+  /* 1. Projection */
+  const pr=projection(ctx),day=n=>n>=pr.H?'after '+fmtS(addDays(pr.start,pr.H-1)):fmtS(addDays(pr.start,n));
+  const mid=(st.goalLo+st.goalHi)/2;
+  h+=`<section class="sec"><h2>1. Projected weight</h2><p class="hint" style="margin:0 0 6px">Median path (line) with an 80% band, from a simulation of 500 plausible versions of you. Dots are weigh-ins.</p>${chartBand(pr)}
+  <div class="grid2" style="margin-top:10px"><div class="stat">Reach ${st.goalHi} lb<b>${day(pr.crossTop[1])}</b>${day(pr.crossTop[0])} to ${day(pr.crossTop[2])}</div><div class="stat">Reach ${mid} lb<b>${day(pr.crossMid[1])}</b>${day(pr.crossMid[0])} to ${day(pr.crossMid[2])}</div>
+  <div class="stat">Maintenance estimate<b>${fint(pr.tdee[1])} cal</b>${fint(pr.tdee[0])} to ${fint(pr.tdee[2])}</div><div class="stat">Days logged<b>${pr.logged} of ${pr.obs}</b>${pr.recentIntake?'Recent average '+fint(pr.recentIntake)+' cal':'Unlogged days assume the plan'}</div></div>
+  <p class="hint">${pr.wis.length?`Updated with ${pr.wis.length} weigh-in${pr.wis.length>1?'s':''} (effective sample ${Math.round(pr.ess)} of 500). Each new weigh-in narrows the band and pins down your real maintenance.`:'No weigh-ins yet, so the band only reflects your inputs. Even one weigh-in on a gym or pharmacy scale every couple of weeks would narrow it a lot.'}</p>
+  <details><summary class="small">Weigh-ins (optional)</summary>${(ctx.weighins||[]).map((w,i)=>`<div class="row between small" style="padding:4px 0"><span>${fmtD(w.d)}: ${w.w} lb</span>${ctx.demo?'':`<button class="link small" data-act="rmWeigh" data-i="${i}">Remove</button>`}</div>`).join('')||'<p class="small muted">None yet.</p>'}
+  ${ctx.demo?'':`<div class="row" style="gap:6px;margin-top:6px"><input id="wid" type="date" value="${TODAY}" style="flex:1"><input id="wiw" type="number" step="0.1" inputmode="decimal" placeholder="lb" style="width:90px"><button class="btn" data-act="addWeigh">Add</button></div><p class="hint">Weigh at a similar time of day; any scale works since the model allows about ±2 lb of noise.</p>`}</details>
+  <details><summary class="small">Model assumptions</summary><div class="grid2" style="margin-top:6px">${['startW|Starting weight (lb)','maint|Maintenance estimate (cal)','maintSd|Maintenance uncertainty (± cal)','goalLo|Goal low (lb)','goalHi|Goal high (lb)'].map(x=>{const[k,l]=x.split('|');return`<label class="field">${l}<input type="number" data-set="${k}" value="${esc(st[k])}"></label>`;}).join('')}</div>
+  <p class="hint">Each simulation draws a maintenance level (your estimate ± the uncertainty), a starting weight (±1.5 lb), and a logging bias (people tend to eat about 8% more than they log, ±8%). Weight changes by the daily gap ÷ 3,500, and maintenance drops about 10 calories per pound lost. Weigh-ins reweight the simulations by how well each one matches (Gaussian likelihood, σ = 2 lb).</p></details></section>`;
+
+  /* 2. Variance */
+  const V=[];for(let i=0;i<28;i++){const s=addDays(ctx.today,-i);if(diffDays(st.start,s)<0)break;const e=eatenDay(ctx,s);if(e&&e.logged)V.push({s,...e});}
+  h+=`<section class="sec"><h2>2. Plan vs. actual</h2>`;
+  if(V.length<3)h+=`<p class="muted small">Shows up after 3 logged days. Check off meals and add any extras on the Today tab.</p>`;
+  else{const av=k=>mean(V.map(v=>v[k]));const P=av('planned'),A=av('k'),sk=av('skipped'),ex=av('ext'),ov=av('over');
+    const freeN=V.reduce((a,v)=>{const p=planFor(v.s);return a+(p.l==='FREE')+(p.d==='FREE');},0),ovPer=freeN?V.reduce((a,v)=>a+v.over,0)/freeN:0;
+    const byWd=[1,2,3,4,5,6,0].map(w=>{const xs=V.filter(v=>pd(v.s).getDay()===w);return xs.length?mean(xs.map(v=>v.k-v.planned)):0;});
+    const slotRate=SLOTS.map(([sl])=>{let pl=0,sk=0;V.forEach(v=>{const p=planFor(v.s),id=p[sl];if(id&&id!=='FREE'){pl++;if(!((ctx.J[v.s]||{}).ate||{})[sl])sk++;}});return pl?sk/pl*100:0;});
+    const leaks=[['off-plan extras',ex],['free meals over budget',ov]].sort((a,b)=>b[1]-a[1]);const worstWd=byWd.indexOf(Math.max(...byWd));const wdName=DFULL[[1,2,3,4,5,6,0][worstWd]];
+    h+=`<div class="grid2"><div class="stat">Planned, per day<b>${fint(P)} cal</b></div><div class="stat">Actual, per day<b>${fint(A)} cal</b>${A>st.kcal?`${fint(A-st.kcal)} over target`:`${fint(st.kcal-A)} under target`}</div></div>
+    <h3>Where the gap comes from (average per logged day)</h3>${barChart(['Skipped meals','Extras','Free meals over'],[sk,ex,ov],{fmt:v=>(v>0?'+':'')+fint(v)})}
+    <h3>Net variance by weekday (actual minus plan)</h3>${barChart(['M','T','W','T','F','S','S'],byWd,{fmt:v=>(v>0?'+':'')+fint(v)})}
+    <h3>How often each meal gets skipped</h3>${barChart(['Bkfst','Lunch','Snack','Dinner','Snack 2'],slotRate,{fmt:v=>fint(v)+'%',color:()=> 'var(--herb)'})}
+    <p class="free">Biggest leak: ${leaks[0][1]>5?`${leaks[0][0]}, about ${fint(leaks[0][1])} calories a day`:'nothing major; you are close to the plan'}. ${wdName}s run furthest over (${byWd[worstWd]>0?'+':''}${fint(byWd[worstWd])}). ${freeN?`Free meals average ${ovPer>0?'+':''}${fint(ovPer)} vs. budget.`:''}</p>`;}
+  h+=`</section>`;
+
+  /* 3. Satiety drivers */
+  const rows=[];const days=Math.max(0,diffDays(st.start,ctx.today));
+  for(let n=1;n<=days;n++){const s=addDays(st.start,n),p=planFor(s),j=ctx.J[s]||{},pp=planFor(addDays(s,-1));if(!p||!pp||!j.hL)continue;
+    const dp=pp.d==='FREE'?40:(pp.d&&R[pp.d]?R[pp.d].p:null);rows.push({hL:+j.hL,dp,sleep:j.sleep?+j.sleep:null,fast:p.b?0:1});}
+  h+=`<section class="sec"><h2>3. What drives morning hunger</h2>`;
+  if(rows.length<5)h+=`<p class="muted small">Shows up after about 5 before-lunch hunger check-ins. Rate hunger right before lunch on the Today tab.</p>`;
+  else{const fa=rows.filter(r=>r.fast).map(r=>r.hL),br=rows.filter(r=>!r.fast).map(r=>r.hL);
+    const ci=a=>a.length>1?1.96*sd(a)/Math.sqrt(a.length):0;
+    h+=`<h3>Before-lunch hunger: fasting vs. breakfast days</h3><div class="grid2"><div class="stat">Fasting days (n=${fa.length})<b>${f1(mean(fa))} / 5</b>±${f1(ci(fa))}</div><div class="stat">Breakfast days (n=${br.length})<b>${f1(mean(br))} / 5</b>±${f1(ci(br))}</div></div>`;
+    const sp=rows.filter(r=>r.dp!==null);const fit=sp.length>=4?(()=>{const o=ols(sp.map(r=>[1,r.dp]),sp.map(r=>r.hL));return o?{a:o.beta[0],b:o.beta[1]}:null;})():null;
+    h+=`<h3>Hunger vs. protein at the previous dinner (g)</h3>${scatter(sp.map(r=>[r.dp,r.hL]),{xl:'protein at dinner (g)',fit})}`;
+    const full=rows.filter(r=>r.dp!==null&&r.sleep!==null);
+    if(full.length>=10){const o=ols(full.map(r=>[1,r.dp/10,r.sleep,r.fast]),full.map(r=>r.hL));
+      if(o){const nm=['Baseline','+10 g protein at dinner','+1 hour of sleep','Fasting day'];
+        h+=`<h3>Regression (n=${o.n}, R² ${f1(o.r2)})</h3><table class="small" style="width:100%;border-collapse:collapse">${o.beta.map((b,i)=>i===0?'':`<tr style="border-top:1px solid var(--line)"><td style="padding:5px 0">${nm[i]}</td><td style="text-align:right">${b>0?'+':''}${f1(b)} ±${f1(o.se[i])}</td><td style="text-align:right;padding-left:8px">${Math.abs(b/(o.se[i]||1))>=2?'<b>likely real</b>':'unclear'}</td></tr>`).join('')}</table>
+        <p class="hint">Change in hunger (1–5 scale) per unit, holding the others constant; ± is one standard error. "Likely real" means the estimate is at least 2 standard errors from zero. With fewer than about 30 days, treat everything as a hint.</p>`;
+        const fe=o.beta[3];h+=`<p class="free">${Math.abs(fe/(o.se[3]||1))>=2?(fe>0?`Fasting days make you about ${f1(fe)} points hungrier before lunch. If that's costing you, try a small high-protein breakfast; total calories are what matter.`:`Fasting isn't making you hungrier. Keep it if it's convenient.`):'Not enough evidence yet on whether fasting changes your hunger.'}</p>`;}}
+    else h+=`<p class="hint">A full regression (dinner protein + sleep + fasting) appears after 10 days that have both hunger and sleep logged. You have ${full.length}.</p>`;}
+  h+=`</section>`;
+
+  /* 4. Recipe scorecard */
+  const RS=ratingStats(ctx);const ids=Object.keys(RS);
+  h+=`<section class="sec"><h2>4. Recipe scorecard</h2>`;
+  if(!ids.length)h+=`<p class="muted small">Rate meals 1–5 on the Today tab after you check them off. Ratings show up here and can steer the schedule.</p>`;
+  else{const rowsR=ids.map(id=>{const r=R[id],o=RS[id],m=mean(o.r);return{id,n:r.n,m,c:o.r.length,pd:r.p/r.k*100,nh:mean(o.nh),min:(r.t.match(/(\d+)\s*min/)||[])[1]};}).sort((a,b)=>b.m-a.m||b.pd-a.pd);
+    h+=`${scatter(rowsR.map(x=>[x.pd,x.m]),{xl:'protein per 100 calories (g)'})}<p class="hint" style="margin-top:0">Top right is the sweet spot: meals you love that are also protein-dense.</p>
+    <table class="small" style="width:100%;border-collapse:collapse"><tr class="muted"><td>Meal</td><td style="text-align:right">Rating</td><td style="text-align:right">g/100 cal</td><td style="text-align:right">Verdict</td></tr>${rowsR.map(x=>`<tr style="border-top:1px solid var(--line)"><td style="padding:5px 4px 5px 0"><button class="link small" data-act="openR" data-id="${x.id}">${esc(x.n)}</button>${x.nh!==null?`<br><span class="muted">next-morning hunger ${f1(x.nh)}</span>`:''}</td><td style="text-align:right">${f1(x.m)} (${x.c})</td><td style="text-align:right">${f1(x.pd)}</td><td style="text-align:right;padding-left:6px">${x.m>=4.5&&x.c>=2?'<span class="pill">Promote</span>':(x.m<=2&&x.c>=2)||x.m<=1?'<span class="pill y">Retire</span>':x.c<2?'<span class="muted">Needs 2+</span>':'Keep'}</td></tr>`).join('')}</table>`;
+    if(!ctx.demo){const nx=nextSundayAfter(TODAY);
+      h+=S.rsnap?`<p class="free">Ratings are steering the schedule from ${fmtD(S.rFrom)} onward: meals averaging 4.5+ (rated at least twice) come back about 30% sooner, and meals averaging 2 or lower are retired (a single 1 retires a meal right away). <button class="link small" data-act="applyR">Re-apply with latest ratings</button> <button class="link small" data-act="clearR">Stop</button></p>`
+        :`<button class="btn primary" data-act="applyR" style="margin-top:10px">Use ratings in the schedule from ${fmtS(nx)}</button><p class="hint">Starts with the next Sunday so this week and any locked weeks don't change.</p>`;}}
+  h+=`</section>`;
+  return h;}
+
+/* ---------- Render ---------- */
+const TABS=[['today','Today','<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>'],['week','Week','<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/>'],['shop','Shop','<path d="M5 8h14l-1 12H6z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/>'],['analytics','Analytics','<path d="M4 20V11M10 20V5M16 20v-8M2 20h20"/>'],['recipes','Recipes','<path d="M4 4h10a4 4 0 0 1 4 4v12H8a4 4 0 0 1-4-4z"/><path d="M8 9h6M8 13h6"/>'],['progress','Progress','<path d="M4 19h16"/><path d="M5 15l4-4 3 3 6-7"/>']];
+function render(){
+  const T={today:vToday,week:vWeek,shop:vShop,recipes:vRecipes,analytics:vAnalytics,progress:vProgress};
+  document.getElementById('title').textContent=TABS.find(t=>t[0]===ui.tab)[1];
+  document.getElementById('main').innerHTML=T[ui.tab]();
+  document.getElementById('nav').innerHTML=TABS.map(([k,l,ic])=>`<button data-act="tab" data-v="${k}"${ui.tab===k?' aria-current="page"':''}><svg viewBox="0 0 24 24" aria-hidden="true">${ic}</svg>${l}</button>`).join('');
+  document.getElementById('modal').innerHTML=vRecipe();}
+
+/* ---------- Events ---------- */
+let timerInt=null;
+function tick(){const el=document.getElementById('timer');const left=Math.max(0,Math.round((ui.timerEnd-Date.now())/1000));
+  if(el)el.textContent=Math.floor(left/60)+':'+pad(left%60);
+  if(left<=0){clearInterval(timerInt);timerInt=null;ui.timerEnd=0;ui.timerDone=true;if(ui.tab==='today')render();}}
+document.addEventListener('click',e=>{
+  const el=e.target.closest('[data-act]');if(!el)return;
+  if(el.dataset.act==='closeR'&&e.target.closest('[data-stop]')&&!e.target.closest('.iconbtn'))return;
+  const a=el.dataset.act,d=el.dataset;let s=ui.date;
+  switch(a){
+  case'tab':ui.tab=d.v;window.scrollTo(0,0);break;
+  case'dprev':ui.date=addDays(s,-1);break;case'dnext':ui.date=addDays(s,1);break;case'dtoday':ui.date=TODAY;break;
+  case'ate':{const j=J(s);j.ate[d.slot]=!j.ate[d.slot];save();break;}
+  case'openR':ui.recipe=d.id;ui.scale=R[d.id].batch||1;break;
+  case'closeR':ui.recipe=null;break;
+  case'scale':ui.scale=+d.v;break;
+  case'addx':{const n=document.getElementById('xn').value.trim(),k=+document.getElementById('xk').value||0,p=+document.getElementById('xp').value||0;if(!n&&!k)return;J(s).extras.push({n:n||'Extra',k,p});save();break;}
+  case'rmx':J(s).extras.splice(+d.i,1);save();break;
+  case'rate':{const j=J(s);j[d.k]=+j[d.k]===+d.v?0:+d.v;save();break;}
+  case'water':{const j=J(s);j.water=Math.max(0,Math.min(16,(j.water||0)+ +d.v));save();break;}
+  case'prep':{const j=J(s);j.prep=j.prep||{};j.prep[d.k]=!j.prep[d.k];save();break;}
+  case'timer':if(ui.timerEnd){ui.timerEnd=0;clearInterval(timerInt);timerInt=null;}else{ui.timerEnd=Date.now()+600000;ui.timerDone=false;timerInt=setInterval(tick,1000);}break;
+  case'addif':{const v=document.getElementById('ifn').value.trim();if(!v)return;S.ifthen.push(v);save();break;}
+  case'rmif':S.ifthen.splice(+d.i,1);save();break;
+  case'wprev':ui.week=addDays(ui.week,-7);break;case'wnext':ui.week=addDays(ui.week,7);break;case'wthis':ui.week=TODAY<S.settings.start?monday(S.settings.start):monday(TODAY);break;
+  case'resetday':delete S.plan[d.date];save();break;
+  case'rrate':{const j=J(s);j.rt=j.rt||{};j.rt[d.slot]=+j.rt[d.slot]===+d.v?0:+d.v;save();break;}
+  case'demo':ui.demo=!ui.demo;DEMO=null;window.scrollTo(0,0);break;
+  case'addWeigh':{const dd=document.getElementById('wid').value,w=parseFloat(document.getElementById('wiw').value);if(!dd||isNaN(w))return;S.weighins=(S.weighins||[]).filter(x=>x.d!==dd).concat([{d:dd,w}]).sort((a,b)=>a.d<b.d?-1:1);save();break;}
+  case'rmWeigh':S.weighins.splice(+d.i,1);save();break;
+  case'applyR':{const RS=ratingStats({J:S.J,today:TODAY});S.rsnap={};Object.entries(RS).forEach(([id,o])=>{const m=mean(o.r);if(o.r.length>=2||m<=1)S.rsnap[id]=m;});S.rFrom=nextSundayAfter(TODAY);buildBase();save();break;}
+  case'clearR':S.rsnap=null;S.rFrom=null;buildBase();save();break;
+  case'lock':lockWeek(d.date);save();break;
+  case'unlock':if(!confirm('Unlock this week? You can swap meals again, and the prep checklist and shopping list will recalculate. Anything you already cooked or bought stays the same.'))return;delete S.locks[d.date];save();break;
+  case'tprev':ui.trip=Math.max(0,ui.trip-1);break;case'tnext':ui.trip=Math.min(39,ui.trip+1);break;
+  case'shopchk':case'uncheck':case'exchk':case'exrm':case'exadd':{const t=trips()[ui.trip];const st=S.shop[t]||(S.shop[t]={c:{},x:[]});st.c=st.c||{};st.x=st.x||[];
+    if(a==='shopchk')st.c[d.k]=!st.c[d.k];if(a==='uncheck'){st.c={};st.x.forEach(x=>x.c=false);}
+    if(a==='exchk')st.x[+d.i].c=!st.x[+d.i].c;if(a==='exrm')st.x.splice(+d.i,1);
+    if(a==='exadd'){const v=document.getElementById('exn').value.trim();if(!v)return;st.x.push({n:v,c:false});}
+    save();break;}
+  case'have':{S.have=S.have||{};if(S.have[d.k])delete S.have[d.k];else S.have[d.k]='some at home';save();break;}
+  case'export':ui.showExport=!ui.showExport;ui.showImport=false;break;
+  case'import':ui.showImport=!ui.showImport;ui.showExport=false;break;
+  case'copy':{const t=document.getElementById('exp');t.select();(navigator.clipboard?navigator.clipboard.writeText(t.value):Promise.reject()).then(()=>{el.textContent='Copied';}).catch(()=>{try{document.execCommand('copy');}catch(_){}el.textContent='Copied';});return;}
+  case'doimport':{try{const v=JSON.parse(document.getElementById('imp').value);if(!v.settings)throw 0;if(!confirm('Replace all current data with this backup?'))return;mergeIn(v);ui.showImport=false;save();}catch(err){alert('That text is not a valid backup. Paste the full backup text and try again.');return;}break;}
+  case'reset':if(!confirm('Erase all plans, check-ins, and shopping checks? This cannot be undone.'))return;S=JSON.parse(JSON.stringify(DEF));buildBase();save();break;
+  default:return;}
+  render();});
+document.addEventListener('change',e=>{
+  const el=e.target,s=ui.date;
+  if(el.dataset.ch==='slot'&&lockOf(el.dataset.date)){render();return;}
+  if(el.dataset.ch==='slot'){const dt=el.dataset.date,sl=el.dataset.slot,v=el.value,b=basePlan(dt);S.plan[dt]=S.plan[dt]||{};
+    if(b&&b[sl]===v)delete S.plan[dt][sl];else S.plan[dt][sl]=v;if(!Object.keys(S.plan[dt]).length)delete S.plan[dt];save();render();return;}
+  if(['sleep','freeK','freeLK'].includes(el.dataset.ch)){const v=parseFloat(el.value),j=J(s);if(isNaN(v))delete j[el.dataset.ch];else j[el.dataset.ch]=v;save();render();return;}
+  if(el.dataset.set){const k=el.dataset.set;let v=el.value;if(el.type==='number'){v=parseFloat(v);if(isNaN(v))return;if(k==='tripEvery')v=Math.max(5,Math.min(35,Math.round(v)));}
+    if(el.type==='date'&&!v)return;S.settings[k]=v;if(k==='tripStart'||k==='tripEvery')ui.trip=null;DEMO=null;if(['start','tripStart','tripEvery','kcal'].includes(k))buildBase();save();render();return;}});
+document.addEventListener('input',e=>{const el=e.target;
+  if(el.dataset.in==='notes'){J(ui.date).notes=el.value;save();}
+  if(el.dataset.in==='why'){S.settings.why=el.value;save();}
+  if(el.dataset.in==='prefs'){S.prefs=el.value;save();}});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&ui.recipe){ui.recipe=null;render();}});
+
+load().then(render);
+</script>
+</body>
+</html>
